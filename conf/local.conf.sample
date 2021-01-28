@@ -1,0 +1,122 @@
+MACHINE ?= "UNASSIGNED"
+
+DISTRO ?= "yogurt"
+
+########################
+# global configuration #
+########################
+
+# That are the default values of bitbake.  Adapt these to your workspace and
+# host preferences.
+#DL_DIR = "${TOPDIR}/downloads"
+#SSTATE_DIR = "${TOPDIR}/sstate-cache"
+
+# License Handling
+#  - Uncomment for i.MX6 proprietary GPU libraries
+#LICENSE_FLAGS_WHITELIST += "license-nxp_v14-june-2016_imx-gpu-viv"
+#  - Uncomment for Freescale i.MX6 VPU firmware blobs
+#LICENSE_FLAGS_WHITELIST += "license-freescale_v12-march-2016_firmware-imx"
+
+# build artifacts are deployed here
+DEPLOY_DIR = "${TOPDIR}/deploy"
+
+# enable bitbakes git shallow functionality: this reduces download volume
+# from 7.3G to 1.6 G as of sumo. If you need the git history of a project,
+# you can run a "git remote update" in the tmp dir, as the remotes are
+# correctly specified
+BB_GIT_SHALLOW = "1"
+
+# Select configuration UI for linux and barebox recipe. The openembedded
+# default is 'menuconfig', 'nconfig' has more features.
+# busybox only supports menuconfig
+#KCONFIG_CONFIG_COMMAND = "menuconfig"
+KCONFIG_CONFIG_COMMAND = "nconfig"
+KCONFIG_CONFIG_COMMAND_pn-busybox = "menuconfig"
+
+# SDK will be build for that cpu
+#SDKMACHINE ?= "x86_64"
+
+# bitbake disk monitor setup
+BB_DISKMON_DIRS ??= "\
+    STOPTASKS,${TMPDIR},1G,100K \
+    STOPTASKS,${DL_DIR},1G,100K \
+    STOPTASKS,${SSTATE_DIR},1G,100K \
+    STOPTASKS,/tmp,100M,100K \
+    ABORT,${TMPDIR},100M,1K \
+    ABORT,${DL_DIR},100M,1K \
+    ABORT,${SSTATE_DIR},100M,1K \
+    ABORT,/tmp,10M,1K"
+
+#######################
+# Image configuration #
+#######################
+
+# The following line disables the autostart of the phytec-qtdemo by
+# default, but you can start the demo anytime using
+#  $ systemctl start phytec-qtdemo.service
+#SYSTEMD_AUTO_ENABLE_pn-phytec-qtdemo = "disable"
+
+# You can disable and enable FSTYPES as you wish. e.g. 'ext4'.
+# This variable is ordering dependend.
+#IMAGE_FSTYPES = "tar.gz wic ubifs emmc"
+
+# Select a preconfigured A/B system setup for SD/eMMC images.
+#WKS_FILES_mx6 = "imx6-rauc-sdimage.wks"
+#WKS_FILES_mx6ul = "imx6-rauc-sdimage.wks"
+#WKS_FILES_mx8m = "imx8m-rauc-sdimage.wks"
+#WKS_FILES_mx8mn = "imx8mn-mp-rauc-sdimage.wks"
+#WKS_FILES_mx8mp = "imx8mn-mp-rauc-sdimage.wks"
+
+# Turn on debugging options of the kernel
+DEBUG_BUILD_pn-linux-mainline = "1"
+# Turn on debugging options of the imx kernel
+DEBUG_BUILD_pn-linux-imx = "1"
+# Turn on debugging options of the barebox
+DEBUG_BUILD_pn-barebox = "1"
+
+# The default package class of the distro yogurt is 'package_ipk'. The first
+# value is used as the package manager to build the image and sdk. To build
+# also tar packages use
+#PACKAGE_CLASSES = "package_ipk package_tar"
+
+# Variable IMAGE_ROOTFS_EXTRA_SPACE from poky/meta/conf/documentation.conf:
+#   Defines additional free disk space created in the image in Kbytes. By
+#   default, this variable is set to '0'.
+# This example line adds an additional 512 MiB of free space to the root
+# filesystem:
+#IMAGE_ROOTFS_EXTRA_SPACE = "524288"
+
+# See http://www.yoctoproject.org/docs/1.8/ref-manual/ref-manual.html#ref-features-image
+#   "Through these variables, you can add several different predefined
+#    packages such as development utilities or packages with debug information
+#    needed to investigate application problems or profile applications
+EXTRA_IMAGE_FEATURES = ""
+# - "Makes an image suitable for development (e.g. allows root logins without
+#    passwords and enables post-installation logging)"
+EXTRA_IMAGE_FEATURES += "debug-tweaks"
+# - "Installs debug symbol packages for all packages installed in a given
+#    image."
+#EXTRA_IMAGE_FEATURES += "dbg-pkgs"
+# - "Installs debugging tools such as strace and gdb."
+#EXTRA_IMAGE_FEATURES += "tools-debug"
+
+######################
+# rauc configuration #
+######################
+
+# certificate location for signing bundles
+#CERT_PATH = "${TOPDIR}/../sources/meta-yogurt/openssl-ca"
+
+####################
+# QT configuration #
+####################
+
+# We disable qt widgets per default to save about 10 MB of storage. If
+# you need qt widget support, you can enable it with this line
+#DISTRO_FEATURES_append = " qtwidgets"
+
+CONF_VERSION = "1"
+
+# Uncomment to accept NXP EULA (needed, if any NXP / freescale layer is used)
+# EULA can then be found under ../sources/meta-freescale/EULA
+#ACCEPT_FSL_EULA = "1"
