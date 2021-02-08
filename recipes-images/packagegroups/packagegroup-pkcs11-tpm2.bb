@@ -14,5 +14,7 @@ RDEPENDS_${PN} = " \
     libtss2-tcti-mssim \
     opensc \
     libp11 \
+    gnutls \
+    gnutls-bin \
     tpm2-pkcs11 \
 "
