@@ -23,6 +23,7 @@ IMAGE_INSTALL = " \
     cryptsetup \
     tzdata \
     ntp \
+    curl \
 "
 
 IMAGE_INSTALL_append_mx6 = " firmwared"
