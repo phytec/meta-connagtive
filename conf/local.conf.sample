@@ -1,5 +1,4 @@
 MACHINE ?= "UNASSIGNED"
-
 DISTRO ?= "yogurt"
 
 ########################
@@ -51,21 +50,11 @@ BB_DISKMON_DIRS ??= "\
 # Image configuration #
 #######################
 
-# The following line disables the autostart of the phytec-qtdemo by
-# default, but you can start the demo anytime using
-#  $ systemctl start phytec-qtdemo.service
-#SYSTEMD_AUTO_ENABLE_pn-phytec-qtdemo = "disable"
-
 # You can disable and enable FSTYPES as you wish. e.g. 'ext4'.
 # This variable is ordering dependend.
 #IMAGE_FSTYPES = "tar.gz wic ubifs emmc"
 
 # Select a preconfigured A/B system setup for SD/eMMC images.
-#WKS_FILES_mx6 = "imx6-rauc-sdimage.wks"
-#WKS_FILES_mx6ul = "imx6-rauc-sdimage.wks"
-#WKS_FILES_mx8m = "imx8m-rauc-sdimage.wks"
-#WKS_FILES_mx8mn = "imx8mn-mp-rauc-sdimage.wks"
-#WKS_FILES_mx8mp = "imx8mn-mp-rauc-sdimage.wks"
 
 # Turn on debugging options of the kernel
 DEBUG_BUILD_pn-linux-mainline = "1"
@@ -106,14 +95,6 @@ EXTRA_IMAGE_FEATURES += "debug-tweaks"
 
 # certificate location for signing bundles
 #CERT_PATH = "${TOPDIR}/../sources/meta-yogurt/openssl-ca"
-
-####################
-# QT configuration #
-####################
-
-# We disable qt widgets per default to save about 10 MB of storage. If
-# you need qt widget support, you can enable it with this line
-#DISTRO_FEATURES_append = " qtwidgets"
 
 CONF_VERSION = "1"
 
