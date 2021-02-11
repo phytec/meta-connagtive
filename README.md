@@ -3,7 +3,7 @@ meta-esec-iotdm
 
 > **Note:** This layer is currently **work-in-progress** and should not be used
 > for production-ready products.
-> 
+>
 > More information about the functionality and the offer will be published with
 > the first offical release.
 
@@ -25,9 +25,9 @@ first:
 Maintainer
 ==========
 
-* Maik Otto `<m.otto@phytec.de>`
-* Martin Schwan `<m.schwan@phytec.de>`
-* Florian Schrank `<f.schrank@osb-ag.de>`
+* Maik Otto `m.otto@phytec.de`
+* Martin Schwan `m.schwan@phytec.de`
+* Florian Schrank `f.schrank@osb-ag.de`
 
 Dependencies
 ============
