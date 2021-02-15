@@ -1,0 +1,27 @@
+From 62988c54b7773eb0705805c00427510ce011152f Mon Sep 17 00:00:00 2001
+From: Martin Schwan <m.schwan@phytec.de>
+Date: Mon, 15 Feb 2021 15:22:16 +0100
+Subject: [PATCH 2/2] include: configs: Enable booting A/B system by default
+ for i.MX8M Mini
+
+Signed-off-by: Martin Schwan <m.schwan@phytec.de>
+---
+ include/configs/phycore_imx8mm.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/configs/phycore_imx8mm.h b/include/configs/phycore_imx8mm.h
+index 02793fc554..469df45e15 100644
+--- a/include/configs/phycore_imx8mm.h
++++ b/include/configs/phycore_imx8mm.h
+@@ -77,7 +77,7 @@
+ 		"else " \
+ 			"echo WARN: Cannot load the DT; " \
+ 		"fi;\0" \
+-	"doraucboot=0\0" \
++	"doraucboot=1\0" \
+ 	"raucdev=2\0" \
+ 	PHYCORE_RAUC_ENV_BOOTLOGIC
+ 
+-- 
+2.30.1
+
