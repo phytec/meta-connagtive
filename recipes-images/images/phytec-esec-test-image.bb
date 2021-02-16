@@ -15,6 +15,7 @@ IMAGE_INSTALL = " \
     openssh \
     ${@bb.utils.contains("MACHINE_FEATURES", "tpm2", "packagegroup-openssl-tpm2", "",  d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "tpm2", "packagegroup-pkcs11-tpm2", "", d)} \
+    chrony \
     coreutils \
     keyutils \
     lvm2 \
@@ -23,7 +24,6 @@ IMAGE_INSTALL = " \
     fscryptctl \
     cryptsetup \
     tzdata \
-    ntp \
     curl \
     iproute2 \
     awsclient \
