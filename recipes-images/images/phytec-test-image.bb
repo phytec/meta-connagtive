@@ -25,6 +25,7 @@ IMAGE_INSTALL = " \
     tzdata \
     ntp \
     curl \
+    awsclient \
 "
 
 IMAGE_INSTALL_append_mx6 = " firmwared"
