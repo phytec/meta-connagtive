@@ -1,0 +1,9 @@
+[Unit]
+Description=Timer for executing OSB AWS Client periodically
+
+[Timer]
+OnActiveSec=1m
+OnUnitActiveSec=30m
+
+[Install]
+WantedBy=basic.target

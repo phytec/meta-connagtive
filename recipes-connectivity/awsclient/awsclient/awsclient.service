@@ -1,0 +1,13 @@
+[Unit]
+Description=OSB AWS Client
+After=network.target
+
+[Service]
+Type=oneshot
+User=root
+ExecStart=/usr/bin/awsclient
+WorkingDirectory=/root/
+TimeoutStartSec=15m
+
+[Install]
+WantedBy=multi-user.target
