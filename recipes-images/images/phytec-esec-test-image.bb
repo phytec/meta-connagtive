@@ -26,6 +26,7 @@ IMAGE_INSTALL = " \
     ntp \
     curl \
     iproute2 \
+    esec-provisioning \
 "
 
 IMAGE_INSTALL_append_mx6 = " firmwared"
