@@ -1,0 +1,10 @@
+#!/bin/sh
+
+if [ "@COLOR@" = "led-red" ]; then
+
+        echo 0 > /sys/class/leds/led-blue/brightness
+else
+        echo 0 > /sys/class/leds/led-red/brightness
+fi
+echo 0 > /sys/class/leds/led-green/brightness
+echo heartbeat > /sys/class/leds/@COLOR@/trigger

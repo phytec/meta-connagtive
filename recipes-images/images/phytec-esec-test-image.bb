@@ -30,6 +30,7 @@ IMAGE_INSTALL = " \
     esec-provisioning \
     phytec-board-info \
     phytec-board-config \
+    blink-led \
 "
 
 IMAGE_INSTALL_append_mx6 = " firmwared"

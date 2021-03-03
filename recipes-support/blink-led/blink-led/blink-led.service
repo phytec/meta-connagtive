@@ -1,0 +1,10 @@
+[Unit]
+Description=LED-blink test
+After=syslog.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/blink-led
+
+[Install]
+WantedBy=multi-user.target
