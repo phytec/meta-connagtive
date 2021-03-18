@@ -26,6 +26,7 @@ IMAGE_INSTALL = " \
     ntp \
     curl \
     awsclient \
+    iproute2 \
 "
 
 IMAGE_INSTALL_append_mx6 = " firmwared"
