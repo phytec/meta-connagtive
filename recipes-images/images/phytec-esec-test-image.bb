@@ -29,6 +29,7 @@ IMAGE_INSTALL = " \
     awsclient \
     esec-provisioning \
     phytec-board-info \
+    phytec-board-config \
 "
 
 IMAGE_INSTALL_append_mx6 = " firmwared"
