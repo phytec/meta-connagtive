@@ -6,7 +6,7 @@ After=network.target
 Type=oneshot
 User=root
 ExecStart=/usr/bin/awsclient
-WorkingDirectory=/root/
+WorkingDirectory=/mnt/config/aws/
 TimeoutStartSec=15m
 
 [Install]
