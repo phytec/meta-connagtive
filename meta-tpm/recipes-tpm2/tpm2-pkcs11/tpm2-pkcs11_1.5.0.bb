@@ -42,10 +42,3 @@ FILES_${PN}-tools = "\
     ${bindir}/tpm2_ptool \
     ${libdir}/${PYTHON_DIR}/* \
 "
-
-FILES_${PN} += " \
-    ${datadir}/p11-kit/modules/tpm2_pkcs11.module \
-    ${libdir}/pkgconfig/tpm2-pkcs11.pc \
-    ${libdir}/pkcs11/libtpm2_pkcs11.so* \
-"
-INSANE_SKIP_${PN} = "dev-so"
