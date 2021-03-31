@@ -6,7 +6,6 @@ inherit packagegroup
 SUMMARY_packagegroup-openssl-tpm2 = "openssl with TPM 2.0 support"
 
 RDEPENDS_${PN} = " \
-    tpm2-tools \
     tpm2-tss \
     libtss2 \
     libtss2-mu \
