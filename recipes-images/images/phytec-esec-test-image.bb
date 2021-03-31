@@ -16,6 +16,7 @@ IMAGE_INSTALL = " \
     ${@bb.utils.contains("MACHINE_FEATURES", "tpm2", "packagegroup-openssl-tpm2", "",  d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "tpm2", "packagegroup-pkcs11-tpm2", "", d)} \
     chrony \
+    ${@bb.utils.contains("MACHINE_FEATURES", "tpm2", "packagegroup-provision-tpm", "", d)} \
     coreutils \
     keyutils \
     lvm2 \
