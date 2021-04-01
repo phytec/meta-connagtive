@@ -27,6 +27,7 @@ IMAGE_INSTALL = " \
     curl \
     iproute2 \
     awsclient \
+    mmc-utils \
 "
 
 IMAGE_INSTALL_append_mx6 = " firmwared"
