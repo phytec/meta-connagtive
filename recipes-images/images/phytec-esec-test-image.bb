@@ -28,6 +28,7 @@ IMAGE_INSTALL = " \
     iproute2 \
     awsclient \
     esec-provisioning \
+    phytec-board-info \
 "
 
 IMAGE_INSTALL_append_mx6 = " firmwared"
