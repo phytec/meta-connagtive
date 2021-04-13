@@ -5,7 +5,7 @@ After=network.target
 [Service]
 Type=oneshot
 User=root
-ExecStart=/usr/bin/awsclient
+ExecStart=/bin/sh -c '[ $(/usr/bin/jq .awsclient < /mnt/config/aws/config/esec.config | grep start | wc -l) -eq 1 ] && /usr/bin/awsclient || { echo "Contract has not been accepted yet"; exit 2; }'
 WorkingDirectory=/mnt/config/aws/
 TimeoutStartSec=15m
 
