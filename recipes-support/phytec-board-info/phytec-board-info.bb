@@ -8,6 +8,8 @@ SRC_URI = " \
     file://phytec-board-info.sh \
 "
 
+S = "${WORKDIR}"
+
 do_install() {
     install -d ${D}${bindir}
     install -m 755 ${S}/phytec-board-info.sh ${D}${bindir}/${BPN}
