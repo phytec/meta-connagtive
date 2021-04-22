@@ -30,6 +30,9 @@ AWSCONFIG_CERT="certs"
 AWSCONFIG_CERTPATH="${AWSCONFIG_PATH}/${AWSCONFIG_CERT}"
 AWSCONFIG_CONFPATH="${AWSCONFIG_PATH}/config"
 ESECCONFIG="esec.config"
+HAWKBITCONFIG_PATH="${CONFIG_PATH}/hawkbit/"
+REMOTEMANAGER_PATH="${CONFIG_PATH}/esec/"
+SSHPUBKEY_PATH="${CONFIG_PATH}/.ssh/"
 
 TPM_PIN=$(cat /sys/devices/soc0/soc_uid | head -c 7)
 
@@ -97,6 +100,10 @@ get_devcertserial () {
 
 do_awsconfig() {
     mkdir -p ${AWSCONFIG_CONFPATH}
+    mkdir -p ${HAWKBITCONFIG_PATH}
+    mkdir -p ${REMOTEMANAGER_PATH}
+    mkdir -p ${SSHPUBKEY_PATH}
+
     get_devcertserial
     FILE=${AWSCONFIG_CONFPATH}/config.json
     if [ ! -f "${FILE}" ]; then
@@ -133,13 +140,13 @@ do_awsconfig() {
   "discover_action_timeout_msecs": 300000,
   "shadow_update_interval_secs": 0,
 
-  "rauc_hawkbit_client_config_dir": "${CONFIG_PATH}/hawkbit/",
+  "rauc_hawkbit_client_config_dir": "${HAWKBITCONFIG_PATH}",
   "rauc_hawkbit_client_config_file": "config.cfg",
 
-  "remote_manager_config_dir": "${CONFIG_PATH}/esec/",
+  "remote_manager_config_dir": "${REMOTEMANAGER_PATH}",
   "remote_manager_config_file": "RemoteManager.conf",
 
-  "ssh_pub_key_dir": "${CONFIG_PATH}/.ssh/",
+  "ssh_pub_key_dir": "${SSHPUBKEY_PATH}",
   "ssh_pub_key_file": "id_ecdsa.pub",
 
   "isoconnect_app_config_dir": "",
