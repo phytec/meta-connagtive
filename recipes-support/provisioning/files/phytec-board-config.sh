@@ -201,6 +201,7 @@ set_onboarded() {
     jsontxt=$(echo ${jsontxt} | jq --arg para timestamp --arg val "$vdate" '.onboarding[$para] =   $val')
     echo ${jsontxt} | jq . > ${FILE}
     set_awsclient start
+    systemctl restart awsclient
 }
 
 set_awsclient(){
