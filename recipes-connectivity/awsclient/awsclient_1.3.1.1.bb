@@ -8,8 +8,8 @@ SRC_URI = "\
     file://awsclient.timer \
 "
 
-SRC_URI[md5sum] = "95b24fb7a64746efac2f2ce57ca2215a"
-SRC_URI[sha256sum] = "e5542f3acbadefe71d9b2fd5b9af9cf1d5acfa436afb9316998d5dbb2cedaae3"
+SRC_URI[md5sum] = "99dbe3ae2f2bddda6a07bdb6899719a4"
+SRC_URI[sha256sum] = "6c0582ae36573b867e85c2405e7f938b78562d0b99aec46301eae549b66dbea2"
 
 DEPENDS = "curl glib-2.0 json-glib openssl"
 
