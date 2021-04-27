@@ -18,10 +18,10 @@ do_install() {
     install -m 0755 ${WORKDIR}/blink-led ${D}/usr/bin/
 
     install -d ${D}${systemd_unitdir}/system
-    install -m 0644 ${WORKDIR}/blink.service ${D}${systemd_unitdir}/system/
+    install -m 0644 ${WORKDIR}/blink-led.service ${D}${systemd_unitdir}/system/
 }
 
 FILES_${PN} = " \
-               ${bindir}/blink-led \
-               ${systemd_unitdir}/system/blink.service \
+    ${bindir}/blink-led \
+    ${systemd_unitdir}/system/blink-led.service \
 "
