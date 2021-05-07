@@ -42,7 +42,7 @@ calc_wt_size() {
     # NOTE: it's tempting to redirect stderr to /dev/null, so supress error
     # output from tput. However in this case, tput detects neither stdout or
     # stderr is a tty and so only gives default 80, 24 values
-    WT_HEIGHT=18
+    WT_HEIGHT=20
     WT_WIDTH=$(echo $COLUMNS)
 
     if [ -z "$WT_WIDTH" ] || [ "$WT_WIDTH" -lt 60 ]; then
@@ -317,7 +317,9 @@ The next steps are:
     Unique device ID (UID) ${certserial}
     Token: ${token}
     Valid until: ${valid}
-    to your account:" $WT_HEIGHT $WT_WIDTH
+    to your account:
+ 3) Press 'Ok'. The awsclient will be
+    restarted three times." $WT_HEIGHT $WT_WIDTH
         else
             # get user item
             set_onboarded accountdevice
@@ -333,6 +335,7 @@ The next steps are:
  4) Check the state of your device in
     your IoT Device Suite account" $WT_HEIGHT $WT_WIDTH
         fi
+        do_restart_awsclient
     else
         if [ $# -eq 0 ]; then
             set_onboarded tokendevice
@@ -340,6 +343,7 @@ The next steps are:
             set_onboarded accountdevice
         fi
         echo "response: ${response}"
+        echo "After a successful onboarding the awsclient needs to be rerun with 'systemctl restart awsclient' three times."
     fi
     return 0
 }
@@ -360,6 +364,12 @@ do_newaccount() {
     return $val
 }
 
+do_restart_awsclient() {
+    echo Restarting awsclient, this may take a while...
+    systemctl restart awsclient
+    systemctl restart awsclient
+    systemctl restart awsclient
+}
 
 calc_wt_size
 do_esecawsconf
