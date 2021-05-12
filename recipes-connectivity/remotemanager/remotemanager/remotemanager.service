@@ -1,0 +1,14 @@
+[Unit]
+Description=Remote SSH Manager
+After=network.target
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=60
+User=root
+ExecStart=/usr/bin/remotemanager
+WorkingDirectory=/mnt/config/esec/
+
+[Install]
+WantedBy=multi-user.target
