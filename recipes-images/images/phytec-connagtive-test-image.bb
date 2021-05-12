@@ -32,6 +32,7 @@ IMAGE_INSTALL = " \
     phytec-board-info \
     phytec-board-config \
     blink-led \
+    remotemanager \
 "
 
 IMAGE_INSTALL_append_mx6 = " firmwared"
