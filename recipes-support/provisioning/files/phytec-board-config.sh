@@ -80,7 +80,7 @@ ${txta}" $WT_HEIGHT $WT_WIDTH
 }
 #export all certs from tpm
 do_extractcert() {
-    mkdir -p ${AWSCONFIG_CERTPATH}
+    mkdir -p ${AWSCONFIG_CERTPATH} --mode=777
     #dev cert
     $tpm2pkcs11tool -r -y cert -a iotdm-cert > ${AWSCONFIG_CERTPATH}/devcert.der
     openssl x509 -inform DER -in ${AWSCONFIG_CERTPATH}/devcert.der -outform PEM -out ${AWSCONFIG_CERTPATH}/devcert.pem
@@ -99,10 +99,10 @@ get_devcertserial () {
 }
 
 do_awsconfig() {
-    mkdir -p ${AWSCONFIG_CONFPATH}
-    mkdir -p ${HAWKBITCONFIG_PATH}
-    mkdir -p ${REMOTEMANAGER_PATH}
-    mkdir -p ${SSHPUBKEY_PATH}
+    mkdir -p ${AWSCONFIG_CONFPATH} --mode=775
+    mkdir -p ${HAWKBITCONFIG_PATH} --mode=775
+    mkdir -p ${REMOTEMANAGER_PATH} --mode=775
+    mkdir -p ${SSHPUBKEY_PATH} --mode=777
 
     get_devcertserial
     FILE=${AWSCONFIG_CONFPATH}/config.json
@@ -171,7 +171,7 @@ fi
 do_esecawsconf() {
     FILE="${AWSCONFIG_CONFPATH}/${ESECCONFIG}"
     if [ ! -f "${FILE}" ]; then
-        mkdir -p ${AWSCONFIG_CONFPATH}
+        mkdir -p ${AWSCONFIG_CONFPATH} --mode=775
         cat > ${FILE} <<EOF
 {
    "eseccontract" : {
@@ -219,9 +219,11 @@ set_awsclient(){
 }
 
 do_opensslconfig() {
-    mkdir -p ${AWSCONFIG_CONFPATH}
-    export OPENSSL_CONF=${AWSCONFIG_CONFPATH}/openssl_curl.cnf
-    cat > ${AWSCONFIG_CONFPATH}/openssl_curl.cnf <<EOF
+    mkdir -p ${AWSCONFIG_CONFPATH} --mode=775
+    FILE=${AWSCONFIG_CONFPATH}/openssl_curl.cnf
+    export OPENSSL_CONF=${FILE}
+    if [ ! -f "${FILE}" ]; then
+        cat > ${FILE} <<EOF
 openssl_conf = openssl_init
 
 [openssl_init]
@@ -236,6 +238,7 @@ MODULE_PATH = /usr/lib/libtpm2_pkcs11.so.0
 PIN = my_pin
 init = 0
 EOF
+    fi
 }
 
 do_clearAWSCONFIG() {
