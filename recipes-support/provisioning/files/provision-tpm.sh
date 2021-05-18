@@ -235,7 +235,7 @@ setup_caroot
 create_csrconf
 
 # make path for tpm2-pkcs11 metadata
-mkdir -p /mnt/config/tpm2/pkcs11
+mkdir -p /mnt/config/tpm2/pkcs11 --mode=775
 
 # TPM Remote Attestation
 tss2_provision
