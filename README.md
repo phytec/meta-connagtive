@@ -1,4 +1,4 @@
-meta-esec-iotdm
+meta-connagtive
 ===============
 
 > **Note:** This layer is currently **work-in-progress** and should not be used
@@ -7,8 +7,8 @@ meta-esec-iotdm
 > More information about the functionality and the offer will be published with
 > the first offical release.
 
-This layer adds support for the [OSB/ESEC IoT Device
-Manager](https://iot.aws.esec-experts.com) on PHYTEC boards.
+This layer adds support for the [Connagtive IoT Device
+Suite](https://iot.aws.esec-experts.com) on PHYTEC boards.
 
 All recipes are provided under the MIT licensing terms unless otherwise noted.
 
