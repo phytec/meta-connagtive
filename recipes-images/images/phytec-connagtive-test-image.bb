@@ -1,4 +1,4 @@
-SUMMARY = "Phytec's headless image"
+SUMMARY = "Phytec's Connagtive IoT Device Suite Test Image"
 DESCRIPTION = "no graphics support in this image"
 LICENSE = "MIT"
 inherit core-image
