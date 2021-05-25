@@ -28,7 +28,7 @@ IMAGE_INSTALL = " \
     curl \
     iproute2 \
     awsclient \
-    esec-provisioning \
+    connagtive-provisioning \
     phytec-board-info \
     phytec-board-config \
     blink-led \
