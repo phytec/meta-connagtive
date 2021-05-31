@@ -102,7 +102,6 @@ do_awsconfig() {
     mkdir -p ${AWSCONFIG_CONFPATH} --mode=775
     mkdir -p ${HAWKBITCONFIG_PATH} --mode=775
     mkdir -p ${REMOTEMANAGER_PATH} --mode=775
-    mkdir -p ${SSHPUBKEY_PATH} --mode=777
 
     get_devcertserial
     FILE=${AWSCONFIG_CONFPATH}/config.json
