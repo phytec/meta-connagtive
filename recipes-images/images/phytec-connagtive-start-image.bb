@@ -3,8 +3,7 @@ DESCRIPTION = "no graphics support in this image"
 LICENSE = "MIT"
 inherit core-image
 
-include security/userauthentication.inc
-include security/simple-fitimage.inc
+require recipes-images/images/security/setrootpassword.inc
 
 IMAGE_ROOTFS_SIZE ?= "8192"
 
@@ -26,6 +25,7 @@ IMAGE_INSTALL = " \
     awsclient \
     phytec-board-config \
     phytec-board-info \
+    ${@bb.utils.contains("DISTRO_FEATURES", "protectionshield", "connagtive-kit-user", "", d)} \
 "
 
 IMAGE_INSTALL_append_mx6 = " firmwared"
