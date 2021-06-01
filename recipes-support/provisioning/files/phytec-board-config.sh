@@ -17,6 +17,8 @@ One of the following options can be selected at a time:
                                             for ESEC IoT Device Manager Platform
   -o, --onboarding                          Only Onboarding the device for ESEC
                                             IoT Device Manager Platform
+  -s, --sshlogin                            Change Authentication for SSH
+  -c, --consolelogin                        Change Authentication for Console
   -h. --help                                This Help
 "
 
@@ -33,6 +35,7 @@ ESECCONFIG="esec.config"
 HAWKBITCONFIG_PATH="${CONFIG_PATH}/hawkbit/"
 REMOTEMANAGER_PATH="${CONFIG_PATH}/esec/"
 SSHPUBKEY_PATH="${CONFIG_PATH}/.ssh/"
+AUTHENT_FILE="${REMOTEMANAGER_PATH}.google_authenticator"
 
 TPM_PIN=$(cat /sys/devices/soc0/soc_uid | head -c 7)
 
@@ -329,6 +332,7 @@ The next steps are:
         fi
         echo "response: ${response}"
     fi
+    do_getauthenticator
     return 0
 }
 
@@ -348,6 +352,62 @@ do_newaccount() {
     return $val
 }
 
+do_login() {
+    login_state=$(awk '/common-auth/ { if (substr($1,1,1) ~ /^[# ]/ ) print 1; else print 0}' /etc/pam.d/${2})
+    password_state="ON"
+    google_state="OFF"
+    if [ ${login_state} -eq 1 ]; then
+        password_state="OFF"
+        google_state="ON"
+    fi
+    login_newstate=$(whiptail --radiolist "Choose the ROOT Verification for" 20 60 10 \
+        "0" "Static Password" $password_state \
+        "1" "One-time Password (IoT Device Suite platform)" $google_state \
+        3>&1 1>&2 2>&3)
+
+    RET=$?
+    if [ $RET -eq 0 ]; then
+        if [ ${login_state} -ne ${login_newstate} ]; then
+            if [ ${login_newstate} -eq 0 ]; then
+                do_login_password ${2}
+            else
+                do_login_authenticator ${2}
+            fi
+        fi
+    fi
+}
+
+do_getauthenticator() {
+    response=$(curl --cacert ${AWSCONFIG_CERTPATH}/rootcert.pem --engine pkcs11 --key-type ENG --key "${PRIVATEKEYURI};pin-value=${TPM_PIN}" --cert ${AWSCONFIG_CERTPATH}/devcert.pem https://devices.aws.esec-experts.com/ownership/ssh_keys)
+    if [ $? -ne 0 ]; then
+       return 1
+    fi
+    devicekey=$(echo ${response} | jq .DEVICE_KEY | tr -d '"' | tr -d "=")
+    scratchcode=$(echo ${response} | jq .SCRATCH_CODES | tr -d '"' | tr -d ',')
+    cat > ${AUTHENT_FILE} <<EOF
+${devicekey}
+" RATE_LIMIT 3 30
+" WINDOW_SIZE 17
+" HOTP_COUNTER 1
+$(echo ${scratchcode} | cut -d ' ' -f 2)
+$(echo ${scratchcode} | cut -d ' ' -f 3)
+$(echo ${scratchcode} | cut -d ' ' -f 4)
+EOF
+chmod 400 ${AUTHENT_FILE}
+}
+
+#parameter sshd or login
+do_login_authenticator() {
+    #set google authenticator for ssh
+    sed -i '/pam_google_authenticator.so/s/^#//g' /etc/pam.d/$1
+    sed -i '/common-auth/s/^/#/g' /etc/pam.d/$1
+}
+
+do_login_password() {
+    #set Password for ssh
+    sed -i '/common-auth/s/^#//g' /etc/pam.d/$1
+    sed -i '/pam_google_authenticator.so/s/^/#/g' /etc/pam.d/$1
+}
 
 calc_wt_size
 do_esecawsconf
@@ -375,6 +435,14 @@ do
         set_eseccontract
         INTERACTIVE=False
         ;;
+    -s|sshlogin)
+        do_login "SSH" "sshd"
+        exit 0
+        ;;
+    -c|consolelogin)
+        do_login "Console" "login"
+        exit 0
+        ;;
     -h|--help)
         echo "$usage"
         exit 0
@@ -393,8 +461,10 @@ if [ "$INTERACTIVE" = True ]; then
         FUN=$(whiptail --title "PHYTEC - ESEC IoT Device Configuration Tool" --backtitle "$(tr -d '\0' < /proc/device-tree/model)" --menu "Setup Options" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT --cancel-button Finish --ok-button Select \
             "1 New Account and Onboarding" "for ESEC IoT Device Manager Platform" \
             "2 Onboarding" "for ESEC IoT Device Manager Platform" \
-            "3 Contract" "for ESEC IoT Device Manager Platform" \
-            "4 About" "ESEC IoT Device Manager Platform" \
+            "3 Login Settings for Serial Console" "" \
+            "4 Login Settings for SSH" "" \
+            "5 Contract" "for ESEC IoT Device Manager Platform" \
+            "6 About" "ESEC IoT Device Manager Platform" \
             3>&1 1>&2 2>&3)
         RET=$?
         if [ $RET -eq 1 ]; then
@@ -403,8 +473,10 @@ if [ "$INTERACTIVE" = True ]; then
             case "$FUN" in
             1\ *) do_newaccount ;;
             2\ *) do_onboarding ;;
-            3\ *) do_contract 1 ;;
-            4\ *) do_about ;;
+            3\ *) do_login "Console" "login" ;;
+            4\ *) do_login "SSH" "sshd" ;;
+            5\ *) do_contract 1 ;;
+            6\ *) do_about ;;
             *) whiptail --msgbox "Programmer error: unrecognized option" $WT_HEIGHT $WT_WIDTH 1 ;;
             esac || whiptail --msgbox "There was an error running option $FUN" 20 60 1
         fi
