@@ -1,6 +1,8 @@
 SUMMARY = "LED blink test"
 LICENSE = "MIT"
 
+inherit systemd
+
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
 
 SRC_URI = " \
@@ -8,20 +10,18 @@ SRC_URI = " \
     file://blink-led \
 "
 
-SYSTEMD_SERVICE_${PN} = "blink.service"
-
-BLINK_COLOR = "led-red"
+SYSTEMD_AUTO_ENABLE_${PN} = "enable"
+SYSTEMD_SERVICE_${PN} = "blink-led.service"
 
 do_install() {
     install -d ${D}/${bindir}
-    sed -i -e "s/@COLOR@/${BLINK_COLOR}/g" ${WORKDIR}/blink-led
     install -m 0755 ${WORKDIR}/blink-led ${D}/usr/bin/
 
-    install -d ${D}${systemd_unitdir}/system
-    install -m 0644 ${WORKDIR}/blink-led.service ${D}${systemd_unitdir}/system/
+    install -d ${D}${systemd_system_unitdir}
+    install -m 0644 ${WORKDIR}/blink-led.service ${D}${systemd_system_unitdir}
 }
 
 FILES_${PN} = " \
     ${bindir}/blink-led \
-    ${systemd_unitdir}/system/blink-led.service \
+    ${systemd_system_unitdir}/blink-led.service \
 "
