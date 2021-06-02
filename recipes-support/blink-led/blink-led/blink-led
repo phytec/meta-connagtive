@@ -1,10 +1,22 @@
 #!/bin/sh
 
-if [ "@COLOR@" = "led-red" ]; then
+if (rauc status | grep -q 'Booted from: rootfs.0 (system0)' &&
+   rauc status | grep -q 'Activated: rootfs.1 (system1)') ||
+   (rauc status | grep -q 'Booted from: rootfs.1 (system1)' &&
+   rauc status | grep -q 'Activated: rootfs.0 (system0)'); then
+    echo 0 > /sys/class/leds/led-green/brightness
+    echo 0 > /sys/class/leds/led-blue/brightness
+    echo heartbeat > /sys/class/leds/led-red/trigger
 
-        echo 0 > /sys/class/leds/led-blue/brightness
-else
-        echo 0 > /sys/class/leds/led-red/brightness
+elif rauc status | grep -q 'Booted from: rootfs.1 (system1)' &&
+     rauc status | grep -q 'Activated: rootfs.1 (system1)'; then
+    echo 0 > /sys/class/leds/led-green/brightness
+    echo 0 > /sys/class/leds/led-red/brightness
+    echo heartbeat > /sys/class/leds/led-blue/trigger
+
+elif rauc status | grep -q 'Booted from: rootfs.0 (system0)' &&
+     rauc status | grep -q 'Activated: rootfs.0 (system0)'; then
+    echo 0 > /sys/class/leds/led-blue/brightness
+    echo 0 > /sys/class/leds/led-red/brightness
+    echo heartbeat > /sys/class/leds/led-green/trigger
 fi
-echo 0 > /sys/class/leds/led-green/brightness
-echo heartbeat > /sys/class/leds/@COLOR@/trigger
