@@ -20,3 +20,12 @@ elif rauc status | grep -q 'Booted from: rootfs.0 (system0)' &&
     echo 0 > /sys/class/leds/led-red/brightness
     echo heartbeat > /sys/class/leds/led-green/trigger
 fi
+rauc_status_old=$(rauc status)
+
+while true; do
+    if [ "$rauc_status_old" != "$(rauc status)" ]
+    then
+        systemctl restart blink-led
+    fi
+    sleep 3
+done
