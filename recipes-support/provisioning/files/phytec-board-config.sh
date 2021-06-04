@@ -1,7 +1,7 @@
 #!/bin/sh
 
 usage="
-PHYTEC Onboarding Tool for ESEC IoT Device Manager Platform
+PHYTEC Onboarding Tool for Connagtive IoT Device Suite Platform
 For More information: https://osb-cc-esec.github.io
 
 Usage:  $(basename $0) [acceptcontract] [OPTION]
@@ -14,9 +14,11 @@ Example:
 One of the following options can be selected at a time:
   acceptcontract                            Accept the contract and no Interface
   -n, --newaccount=<your mailing address>   New account and Onboarding the device
-                                            for ESEC IoT Device Manager Platform
-  -o, --onboarding                          Only Onboarding the device for ESEC
-                                            IoT Device Manager Platform
+                                            for Connagtive IoT Device Suite Platform
+  -o, --onboarding                          Onboarding with existing account the device
+                                            for Connagtive IoT Device Suite Platform
+  -s, --sshlogin                            Change Authentication for SSH
+  -c, --consolelogin                        Change Authentication for Console
   -h. --help                                This Help
 "
 
@@ -55,9 +57,16 @@ calc_wt_size() {
 do_about() {
     whiptail --msgbox "\
 This tool provides a straightforward way of doing initial
-configuration of your PHYTEC Board to the ESEC IoT Device
-Manager Platform  https://iot.aws.esec-experts.com.
+configuration of your PHYTEC Board to the
+Connagtive IoT Device Suite Platform
+https://iot.aws.esec-experts.com.
 More information https://osb-cc-esec.github.io" $WT_HEIGHT $WT_WIDTH 1
+    return $?
+}
+
+do_help() {
+    whiptail --msgbox "\
+In Progress" $WT_HEIGHT $WT_WIDTH 1
     return $?
 }
 
@@ -292,10 +301,10 @@ $check" $WT_HEIGHT $WT_WIDTH
             token=$(echo ${response} | jq .token)
             valid=$(echo ${response} | jq .valid_until)
             whiptail --msgbox "\
-Welcome to the ESEC IoT Device Manager Platform
+Welcome to the Connagtive IoT Device Suite Platform
 The next steps are:
- 1) Login to your account on the ESEC IoT Device
-    Manager Platform https://iot.aws.esec-experts.com.
+ 1) Login to your account on the Connagtive IoT Device
+    Suite Platform https://iot.aws.esec-experts.com.
     If you do not have an account, then use
     option 1) New Account and Onboarding to register
  2) Add the
@@ -310,14 +319,14 @@ The next steps are:
             check=$(echo ${response} | jq .user_item.customer_name)
             whiptail --msgbox "\
 Welcome ${check}
-to the ESEC IoT Device Manager Platform
+to the Connagtive IoT Device Suite Platform
 The next steps are:
  1) Check your email account for a message
     from welcome@esec-experts.com
  2) Verify your email
- 3) Login to your IoT Device Manager account
+ 3) Login to your IoT Device Suite account
  4) Check the state of your device in
-    your IoT Device Manager account" $WT_HEIGHT $WT_WIDTH
+    your IoT Device Suite account" $WT_HEIGHT $WT_WIDTH
         fi
     else
         if [ $# -eq 0 ]; then
@@ -388,11 +397,14 @@ done
 #
 if [ "$INTERACTIVE" = True ]; then
     while true; do
-        FUN=$(whiptail --title "PHYTEC - ESEC IoT Device Configuration Tool" --backtitle "$(tr -d '\0' < /proc/device-tree/model)" --menu "Setup Options" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT --cancel-button Finish --ok-button Select \
-            "1 New Account and Onboarding" "for ESEC IoT Device Manager Platform" \
-            "2 Onboarding" "for ESEC IoT Device Manager Platform" \
-            "3 Contract" "for ESEC IoT Device Manager Platform" \
-            "4 About" "ESEC IoT Device Manager Platform" \
+        FUN=$(whiptail --title "PHYTEC - Connagtive IoT Device Configuration Tool" --backtitle "$(tr -d '\0' < /proc/device-tree/model)" --menu "Setup Options" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT --cancel-button Finish --ok-button Select \
+            "1 New Account and Onboarding" "" \
+            "2 Onboarding with existing Account" "" \
+            "3 Login Settings for Console" "" \
+            "4 Login Settings for SSH" "" \
+            "5 Terms and Conditions" "" \
+            "6 Help" "" \
+            "7 About" "" \
             3>&1 1>&2 2>&3)
         RET=$?
         if [ $RET -eq 1 ]; then
@@ -401,8 +413,11 @@ if [ "$INTERACTIVE" = True ]; then
             case "$FUN" in
             1\ *) do_newaccount ;;
             2\ *) do_onboarding ;;
-            3\ *) do_contract 1 ;;
-            4\ *) do_about ;;
+            3\ *) do_login "Console" "login" ;;
+            4\ *) do_login "SSH" "sshd" ;;
+            5\ *) do_contract 1 ;;
+            6\ *) do_help ;;
+            7\ *) do_about ;;
             *) whiptail --msgbox "Programmer error: unrecognized option" $WT_HEIGHT $WT_WIDTH 1 ;;
             esac || whiptail --msgbox "There was an error running option $FUN" 20 60 1
         fi
