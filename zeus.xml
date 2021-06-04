@@ -71,5 +71,7 @@
   <project name="rauc/meta-rauc" path="sources/meta-rauc" remote="github"/>
   <project name="meta-python2" path="sources/meta-python2" remote="openembedded" revision="4400f9155ec193d028208cf0c66aeed2ba2b00ab"/>
 
-  <project name="meta-security" path="sources/meta-security" remote="yocto"/>
+  <project name="meta-security" path="sources/meta-security" remote="yocto">
+      <sublayer path="meta-tpm"/>
+  </project>
 </manifest>
