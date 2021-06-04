@@ -157,9 +157,9 @@ do_awsconfig() {
 
   "maintenance_task_temp_download_dir": "/tmp/",
   "maintenance_task_download_whitelist_path":
-  "/mnt/config/aws/config/download_whitelist.txt",
+  "/etc/aws/config/download_whitelist.txt",
   "maintenance_task_command_whitelist_path":
-  "/mnt/config/aws/config/command_whitelist.txt",
+  "/etc/aws/config/command_whitelist.txt",
 
   "desired_hawkbit_server_url": "",
 
