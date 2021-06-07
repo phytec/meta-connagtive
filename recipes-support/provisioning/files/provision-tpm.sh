@@ -93,8 +93,13 @@ setup_devuid() {
 
 # Create Device Common Name
 setup_devcn() {
-    val=$(cat /proc/device-tree/model | cut -d ' ' -f 2)
-    export DEV_CN="${val}-${DEV_UID}"
+    val=$(cat /proc/device-tree/model | cut -d ' ' -f 2 | cut -d '-' -f 1)
+    soc=$(cat /sys/devices/soc0/soc_id | tr -d '.')
+    export DEV_CN="${val}-${soc}-${DEV_UID}"
+    if [ ${#DEV_CN} -gt 32 ]; then
+        DEV_CN="phy-${soc}-${DEV_UID}"
+    fi
+    export DEV_CN
 }
 
 # Init Root Certificate
