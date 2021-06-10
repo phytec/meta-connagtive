@@ -7,7 +7,7 @@ Type=oneshot
 User=root
 ExecStart=/bin/sh -c '[ $(/usr/bin/jq .awsclient < /mnt/config/aws/config/esec.config | grep start | wc -l) -eq 1 ] && /usr/bin/awsclient || { echo "Contract has not been accepted yet"; exit 2; }'
 WorkingDirectory=/mnt/config/aws/
-TimeoutStartSec=15m
+TimeoutStartSec=5m
 
 [Install]
 WantedBy=multi-user.target
