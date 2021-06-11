@@ -2,7 +2,7 @@
 
 usage="
 PHYTEC Onboarding Tool for Connagtive IoT Device Suite Platform
-For More information: https://osb-cc-esec.github.io
+For More information: https://doc.iot-suite.io
 
 Usage:  $(basename $0) [acceptcontract] [OPTION]
 
@@ -57,16 +57,20 @@ calc_wt_size() {
 do_about() {
     whiptail --msgbox "\
 This tool provides a straightforward way of doing initial
-configuration of your PHYTEC Board to the
-Connagtive IoT Device Suite Platform
-https://iot.aws.esec-experts.com.
-More information https://osb-cc-esec.github.io" $WT_HEIGHT $WT_WIDTH 1
+configuration of your PHYTEC board for the
+Connagtive IoT Device Suite at https://phytec.iot-suite.io.
+For more information visit https://doc.iot-suite.io." $WT_HEIGHT $WT_WIDTH 1
     return $?
 }
 
 do_help() {
     whiptail --msgbox "\
-In Progress" $WT_HEIGHT $WT_WIDTH 1
+For more information on how to use this tool
+download any manuals and documentation from
+https://www.phytec.de/support/downloads/.
+
+For detailed documentation of the Connagtive
+IoT Device Suite, visit https://doc.iot-suite.io." $WT_HEIGHT $WT_WIDTH 1
     return $?
 }
 
@@ -78,9 +82,11 @@ do_contract() {
             box="--msgbox"
             txta="You have accepted this contract"
         fi
-        whiptail ${box} "\
-Please read the following contract:
-https://osb-cc-esec.github.io
+        whiptail --scrolltext ${box} "\
+$(cat /usr/share/phytec-board-config/AGB_OSB-connagtive_EN)
+
+you can also read the contract here:
+https://www.connagtive.com/agb.html
 ${txta}" $WT_HEIGHT $WT_WIDTH
         if [ $? -eq 0 ] && [ "${box}" = --yesno ]; then
             set_eseccontract
@@ -304,14 +310,13 @@ $check" $WT_HEIGHT $WT_WIDTH
 Welcome to the Connagtive IoT Device Suite Platform
 The next steps are:
  1) Login to your account on the Connagtive IoT Device
-    Suite Platform https://iot.aws.esec-experts.com.
+    Suite Platform https://phytec.iot-suite.io.
     If you do not have an account, then use
     option 1) New Account and Onboarding to register
- 2) Add the
+ 2) Add the device with this
+    Unique device ID (UID) ${certserial}
     Token: ${token}
     Valid until: ${valid}
-    for the device with
-    Certificate serial number ${certserial}
     to your account:" $WT_HEIGHT $WT_WIDTH
         else
             # get user item

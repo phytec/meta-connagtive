@@ -1,0 +1,279 @@
+GENERAL TERMS AND CONDITIONS OF BUSINESS  
+
+SOFTWARE/HARDWARE/IoT 
+
+of  
+
+OSB connagtive GmbH 
+Hans-Fischer-Str. 12 
+80339 Munich  
+
+To provide for the business relations with its customers and cooperation partners, OSB connagtive GmbH issues the following General Terms and Conditions of Business Software/Hardware/IoT ("GT&Cs SHI") regarding its transactions in the field of software licensing, delivery of IoT and control solutions and IoT services:  
+
+I. GENERAL PROVISIONS 
+
+1. Scope of Application, Time, Place 
+
+Except where otherwise agreed, the contractual relations between OSB connagtive GmbH (hereinafter called "company") and enterprises (customers - hereinafter called "clients" - and cooperation partners, all also referred to individually or jointly as "contractual partners") shall be governed by the following GT&Cs SHI for all transactions in the field of software development services, licensing of software modules, delivery of electronic and IoT products and use of IoT cloud services.  
+
+General terms and conditions of business of the contractual partner shall apply only insofar as the company has expressly consented to them in writing.  
+
+Central European time shall apply to all times specified in these Terms and Conditions of Business. 
+
+Unless otherwise agreed, the place where the company's business establishment is located shall be the place of performance for all services arising from the contract. 
+
+2. Conclusion of a Contract, Order of Precedence 
+
+The following provisions applicable between the company and its contractual partner shall apply in the order of precedence set out below:  
+
+a) written individual amendments and supplements after the conclusion of a contract  
+
+b) individual agreement  
+
+c) framework agreement  
+
+d) these GT&Cs  
+
+e) statutory provisions.  
+
+In the event of conflict between these provisions, the first-mentioned provisions shall always take precedence over the provisions mentioned thereafter. Omissions shall be filled by the respective lower-ranking provisions. In the case of agreements of equal ranking, the more recent agreement shall take precedence over the older agreement.  
+
+3. Maintenance of Secrecy, Data Protection 
+
+The contractual partner shall maintain secrecy in respect of all information of a commercial or technical nature, trade secrets and personal data and records that it receives access to, or knowledge of, in the course of the collaboration with the company, and shall not pass on such information to third parties. The contractual partner shall use such information exclusively for the purposes for which it was provided, not for any other purposes of its own or for third-party purposes. These obligations shall also continue to apply unchanged after the collaboration with the company has ended.  
+
+Unless otherwise expressly agreed, the information provided to the company in connection with purchase orders shall not be deemed confidential.  
+
+The company shall be entitled to include the contractual partner's name in a list of references. All other references to the contractual partner shall be agreed upon with the contractual partner beforehand.  
+
+The contractual partner shall observe the statutory provisions concerning data protection and impose upon all employees possibly assigned by it to collect, process, use or transmit data an obligation to observe confidentiality when handling personal data and/or trade secrets. In particular, the contractual partner shall, at the first request of the data subject or the company, rectify or delete personal data provided by the company, unless a statutory obligation conflicts herewith. Personal data no longer needed for fulfilling the purpose of the contract shall be deleted without delay, unless a longer retention period is justified on any legal basis.  
+
+4. Payment, Default 
+
+All prices quoted are understood to be ex works excluding packaging, plus value-added tax at the statutory rate.  
+
+The company's invoices shall be payable, without any deduction, within 14 days of issuance of the invoice.  
+
+The company shall be entitled to offset payments against the contractual partner's older due liabilities first of all; it shall inform the contractual partner of the nature of the offsetting carried out. If charges and interest have already been incurred, the company shall be entitled to set off the payment against the charges first of all, then against the interest and finally against the principal liability.  
+
+If the contractual partner enters into default, the company shall be entitled to demand interest at the rate of 9 percentage points above the respective valid base interest rate from the point in time concerned. The right to assert a claim for further loss shall remain unaffected.  
+
+The contractual partner shall have set-off, retention or price reduction rights only if its counter-claims have been determined by a final and non-appealable court judgement or are undisputed.  
+
+5. Choice of Law, Place of Jurisdiction 
+
+The laws of the Federal Republic of Germany, excluding the United Nations Convention on Contracts for the International Sale of Goods (CISG), shall apply.  
+
+Munich is the place of performance and the place of jurisdiction for all disputes ensuing directly or indirectly from contracts in the area covered by these GT&Cs. However, the company shall be entitled to have recourse to any court that has statutory jurisdiction.  
+
+6. Warranty  
+
+The client shall inspect the delivered goods and services for defects without delay. Detectable defects shall be reported in writing by no later than the 5th business day after their discovery. Hidden defects shall be reported without delay after their discovery. The date of receipt of such notification at the company shall be decisive for observance of the time limit. If the client fails to inspect the goods and services or to report a defect in due time, it shall not be entitled to invoke this defect.  
+
+If a defect in the product delivered is properly reported in due time, the client's claims shall be limited to supplementary performance first of all. This shall not apply if it would be unreasonable to expect the client to accept supplementary performance. Hand-over shall take place anew after the defect has been rectified. If supplementary performance fails twice, or the company refuses to render supplementary performance, the client may reduce the price or rescind the contract. The client shall not be entitled to rescind the contract if the defect is insignificant.  
+
+Claims based on defects in quality shall become statute-barred 12 months after delivery of the parts or services to the client. The foregoing shall not apply insofar as the law prescribes longer limitation periods. The statutory provisions concerning suspension of expiration, suspension of limitation periods and recommencement of limitation periods shall remain unaffected. 
+
+If the client has altered the product delivered, claims based on a defect shall exist only if the client proves that the defect is not due to this alteration.  
+
+If a deliverable is made up of multiple sub-deliverables, and only some of these are defective, any possible statutory right of rescission on the part of the client shall be limited to these defective sub-deliveries.  
+
+7. Liability 
+
+Damage claims against the company, including damage claims based on tort, shall be excluded regardless of the nature of any breach of duty, except in cases of wrongful intent or gross negligence. In cases of gross negligence, however, the company's liability shall be limited to the foreseeable loss typical of this type of contract. Claims based on lost profit, saved expenditure, third-party damage claims or any other indirect or consequential loss shall be assertable only if a guarantee provided by the company is specifically intended to protect the contractual partner against such loss. Liability for the aforementioned cases shall be limited to the total order value.  
+
+The above limitations shall not apply in cases of liability under the Produkthaftungsgesetz [Product Liability Act] or other mandatory legal provisions, liability based on a breach of material contractual duties or liability arising from mortal injury, physical harm or health damage.  
+
+Where the company's liability is excluded or limited, this shall also apply to its liability for its employees, representatives and authorised agents.  
+
+8. Retention of Title 
+
+The company shall retain title to all products delivered by it until the satisfaction of all claims, including all outstanding open account balances, accruing to the company against the client now or in future on any possible legal basis.  
+
+If claims are not satisfied in due time despite a reminder, the company shall have the right to disable devices or software features not paid for and block all possible access. 
+
+9. Subject-matter of the Contract 
+
+The nature and scope of the services to be rendered, as well as prices, completion deadlines and other details shall be laid down in writing between the parties. No verbal agreements shall apply.  
+
+Unless otherwise expressly agreed, the company's offers shall be subject to change without notice and be non-binding. Orders shall not be deemed accepted on a legally binding basis until they have been acknowledged in writing by the company.  
+
+II. Service Contracts and Contracts for Work and Services 
+
+The following shall apply as a supplement to Part I of these GT&Cs: 
+
+1. Place of Performance 
+
+The work shall be carried out at the company's technical offices, as well as in the client's premises if need be. The company reserves the right to wholly or partly contract out the execution of the agreed work to third-party companies.  
+
+2. Performance Period, Rendering of Account 
+
+A working time of 8 hours daily from Monday to Friday shall be deemed agreed upon for services billed on the basis of time spent. This working time shall also be taken as a basis if, for reasons not attributable to the company, the company is unable to render the agreed service. Unless otherwise provided for, travel time and out-of-pocket expenses shall be reimbursed separately.  
+
+3. Qualities of the Service 
+
+The agreed qualities of the services owed shall only include the features and characteristics referred to in the company's offer or in its order acknowledgement and/or in the functional specifications.  
+
+Guarantees regarding qualities or durability within the meaning of Section 443 BGB [German Civil Code] shall be deemed given only if they were expressly referred to as a guarantee. The client's rights in the event that such guarantee enters into operation shall ensue only from the written declaration of guarantee.  
+
+4. Acceptance 
+
+By the agreed point in time, OSB AG shall make available for acceptance the deliverable produced in accordance with the contract. Except where otherwise agreed, the client shall test the deliverable within five business days by independently checking the features specified in the contract. The client shall confirm to the company in writing its acceptance of the deliverable. The deliverable shall be deemed accepted when the client has signed the acceptance test report without reservations.  
+
+If, for a reason other than a significant defect, the client does not accept the deliverable after it has been made available, the deliverable shall be deemed accepted 2 weeks after it was made available.  
+
+Use of the deliverable by the client, in whole or in part, beyond a test phase agreed upon in an individual contract shall be deemed equivalent to acceptance.  
+
+III. Licensing of Software 
+
+The following shall apply as a supplement to Parts I and II of these GT&Cs: 
+
+1. Subject-matter of the Contract 
+
+The company shall develop the contractually agreed software and make it available to the contractual partner for downloading. The following terms and conditions shall apply to the provision and use of the software. The client shall receive the ordinary, non-exclusive, open-ended right to use the software. 
+
+The client is to be given the option of integrating the software into its product and selling it to its customers as a pre-specified complete product (licensing). The client shall pass on and distribute the software to its customers and other third parties only as part of the complete product specified. It shall not be permissible to pass on or sell the software separately. 
+
+2. Delivery of New Programme Versions 
+
+Where the provision of new programme versions of the licensed software has been agreed upon, this shall, in each case, take place without delay after the programme version has become available. The term "programme version" is an umbrella term for patch, update, upgrade and new release. These terms are defined as follows: 
+
+A patch is a temporary bug fix. 
+
+An update comprises multiple bug fixes for the software in one version without any functional enhancements. 
+
+The term "upgrade" stands for a bundling of multiple bug remedies and/or bug fixes as well as minor functional enhancements in one version. 
+
+A new release constitutes a new stage of a software's development that more than insignificantly differs from the previous release in terms of its range of features. 
+
+In respect of new programme versions, the company shall, regardless of the technical procurement source of the software, always grant the client the rights existing for the previous version of the software or for the previous programme version. 
+
+If a new programme version is made available, the client shall, unless otherwise agreed, be entitled to also continue using the previous programme versions instead of the new programme version to the extent agreed upon in this respect. However, parallel use of new and old programme versions shall be permissible only insofar as the limits of the agreed rights of use are not exceeded as a whole as a result thereof. Where OSB AG is obliged to provide a new programme version, this obligation shall be deemed fulfilled upon the provision of the new programme version even if the customer does not use the new programme version. 
+
+New programme versions shall be provided by making them available for downloading via the agreed Internet address. Installation of the programme versions shall be carried out by the client. 
+
+3. Additional Development Services with Uses for the Standard Software 
+
+If the client orders further software development and consultancy services in connection with the provision of the software, any additional functionalities attained as a result of the adaptation shall be incorporated into the standard software insofar as this enhancement of the software library is likely to also be useful for other users, and be licensed. 
+
+4. Bugs, Hotline 
+
+In the event of bugs in the software, the company shall advise and support the client by email. The hotline shall be available to the client on working days (Monday to Friday, except for statutory public holidays at the location of the company's registered office) between 9 am and 5 pm. During these hours, the company shall reply to bug reports and enquiries received by email and telephone. The guaranteed response time for email enquiries is 48 hours, relating to business days. The company endeavours to speedily handle bug reports and enquiries. In performance of its duty to mitigate loss, the client shall report bugs in a timely fashion upon their discovery. If a new programme version that fixes the bug is generally available, the bug shall be fixed by making this programme version available, insofar as this is owed. If the matter to which the enquiry relates is not included in the product's support services in terms of the volume or topic, the company shall, on request, make the client an offer for resolving the matter. 
+
+5. Maintenance Services  
+
+Maintenance services shall only be owed insofar as they have been separately agreed upon in a licence and maintenance contract or are part of new programme versions delivered, as set out in III/2 of this contract. 
+
+IV. Provision of IoT and IT Services 
+
+The following shall apply as a supplement to Parts I, II and III of these GT&Cs: 
+
+1. Subject-matter of the Contract, Scope of Performance 
+
+The company shall offer the client access to a communication infrastructure, the provision of storage space on a server, the use of value-added services, maintenance and administration of data processing systems and communication infrastructures. The details and scope of the services shall be laid down separately where necessary. 
+
+Storage space and services for multiple clients may be provided via the same physical server, but shall always be subject to client-related allocation by means of virtualisation and separate access rights. 
+
+Additional features that are temporarily provided for evaluation or development purposes free of charge, but are not covered by the contractually agreed scope of services may be discontinued at any time. This shall not give rise to any price reduction claim or damage claim on the part of the client or to any right of retention. 
+
+As part of the provision of IoT and IT services, the company shall be entitled to adapt the agreed scope of performance to the respective state of the art at any time; this also includes discontinuation of individual service segments, in particular the company's right to discontinue outdated software versions (end of life). If and insofar as the provision of altered services involves a significant change in the functionalities of the relevant services or in the customer's work procedures supported by the services and/or limitations in the usability of data generated hitherto, the company shall give the customer written notification thereof no later than twelve weeks before the effective date of such change, and shall, where necessary, propose possible alternatives to the customer. Unless the customer objects to the change in writing within four weeks of receipt of the notice of the change, the change shall become part of the contract. When giving notification of changes, the company shall, in each case, point out to the customer the aforementioned time limit and the legal consequences of any failure to exercise in due time the right to object.  
+
+The company shall be entitled to appropriately increase the agreed prices for the contractual services in order to offset increases in personnel costs and other costs. The company shall communicate these price increases to the customer in writing or by email; the price increases shall not apply to the periods for which the customer has already made payments. If the price increase (measured in terms of the overall use of the services offered, not of individual services for examples) amounts to more than 20 % of the price currently applicable, the customer shall be entitled to terminate the contract as a whole with effect from the end of the agreed contract term or - if no such term has been specified - with three months' notice with effect from the end of a quarter. If the customer makes use of this right to terminate, the non-increased prices shall be charged up to the effective date of termination. The provider shall point out this right of termination to the customer together with every notification. 
+
+Product evaluation: If the company makes available to the client for evaluation purposes services or ranges of services free of charge or at special prices for a limited period, the customary entitlement to availability and quality of the services shall not apply. Particularly in the case of possible temporary, free use of features not covered by the agreed scope of performance, the company shall be entitled to discontinue the availability of these additional services at any time. The evaluation customer shall be informed of changes insofar as possible. In the context of evaluation, warranty claims of the customer are excluded. Evaluation services are not intended to be used in the customer's go-live systems, but only in a test environment of the customer. Reverse engineering of software and services is prohibited. 
+
+2. Terms of Use 
+
+The client shall use the company's services only for the envisaged/contractually agreed purpose. In particular, it shall be obliged to  
+
+a) inform the company of any changes to the bases of the contract without delay;  
+
+b) not misuse the possibilities of accessing the company's services and refrain from carrying out any unlawful or illegal acts; in particular, the client shall be prohibited from 
+
+using without authorisation the services of other subscribers to the company's services (hereinafter "the services"), 
+
+using without authorisation services not agreed upon in the contract between the company and the client, 
+
+decrypting, reading or altering passwords, emails, data files or the like of other subscribers to the services, or of the system operator, 
+
+distributing without authorisation individual applications of licensed application software via the services, 
+
+interrupting or blocking communication services, for example by overloading these, insofar as the client is at fault for this, 
+
+distributing or making accessible criminal content of any kind via the services; 
+
+this shall particularly apply to pornographic or violence-glorifying content or content directed against the free democratic basic order or the concept of understanding among nations, as well as to propaganda material and emblems of unconstitutional parties or associations or their substitute organisations, 
+
+obtaining for itself or third parties pornographic content involving the sexual abuse of children; 
+
+if the client acts contrary to the contract (in particular contrary to the aforementioned points), it shall reimburse the company for the incurred material and personnel expenditure as well as for expenses incurred; 
+
+c) ensure that statutory provisions and official requirements are complied with, insofar as these are relevant at present or in future to the participation in the company's communication services:  
+
+d) take into account and observe the applicable provisions concerning data protection and the recognised principles of data security;  
+
+e) report to the company without delay detectable defects or damage (fault reports) and take all measures that enable defects or damage and the causes thereof to be determined or that facilitate and speed up the rectification of the fault;  
+
+f) reimburse the company for the expenditure incurred as a result of the inspection of its facilities following the submission of a fault report, if and insofar as it emerges after the inspection that a fault existed within the client's sphere of responsibility (outside of the scope of contract and performance possibly defined).  
+
+The company shall be entitled to terminate the contractual relationship without prior notice with immediate effect if the client breaches the duties referred to in points b) and c) above; in the other cases, after having issued a warning to no avail.  
+
+Details of the interaction among the users may be agreed upon on a partnership basis by way of user rules.  
+
+In the cases under point c) above, the company shall, upon becoming aware of a breach by the client as set out therein, be authorised, in addition to the entitlement to terminate the contractual relationship without prior notice, to block with immediate effect the access to the services ensuing from the scope of performance. 
+
+ 
+
+3. Retention, Impairment of Performance 
+
+The client shall be entitled to assert a right of retention only on the basis of counter-claims resulting from the same contractual relationship as the claims against which the right of retention is invoked.  
+
+Damage claims based on impairments of delivery or service shall be excluded insofar as these are not attributable to the company on the basis of wrongful intent or gross negligence.  
+
+If a significant disruption to the company's services lasts longer than one week, and an actual outage period longer than one business day results therefrom, the client shall be entitled to reduce the monthly fees and charges accordingly from the time when the hindrance commences until the time when it ends. A significant hindrance shall exist if  
+
+a) the customer is, for reasons not attributable to the customer or for reasons attributable to third parties, no longer able to access the company's communication infrastructure and can thus no longer use the services possibly contractually agreed, and  
+
+b) the use of these services as a whole is significantly impeded, or the use of individual services becomes impossible, or comparable limitations exist.  
+
+A price reduction shall be excluded in cases of service outage due to a disruption beyond the company's sphere of responsibility. The same shall apply to an outage of services due to necessary business interruptions under Part IV/4 of these GT&Cs. 
+
+4. Availability of the Services 
+
+The company shall offer the services under Part IV of these GT&Cs 24 hours a day, 7 days a week. This shall not apply to evaluation services. Notification of necessary business interruptions for preventative maintenance work shall be given at the earliest point in time. The company shall, within the bounds of the existing technical and operational possibilities, rectify faults in its technical facilities as quickly as possible. 
+
+5. The Customer's Liability 
+
+The client shall be liable for all consequences and disadvantages incurred upon the company or third parties as a result of misuse or unlawful use of the services or as a result of the client having failed to meet its other obligations. 
+
+V. Delivery of Electronic Products 
+
+The following shall apply as a supplement to Parts I, II, III and IV of these GT&Cs: 
+
+1. Terms of Delivery 
+
+Deliveries shall take place ex works (Incoterms 2010), unless otherwise agreed in writing. Delivery periods possibly agreed upon shall in no event begin prior to the clarification of all economic and technical details or prior to the fulfilment of all preconditions by the client and shall, unless otherwise agreed in writing, not be binding upon the company. 
+
+Orders for deliveries shall be deemed fulfilled in accordance with the following provisions: 
+
+a) in the case of delivery ex works: upon notification that the products are ready for shipment; 
+
+b) in the case of deliveries for which a different place of delivery has been agreed: as soon as the shipment of the products has been initiated by the company; 
+
+c) in the case of services: upon commencement of the rendering of the services. 
+
+The company shall be entitled to make sub-deliveries or advance deliveries. 
+
+The company shall endeavour to adhere to the agreed delivery period insofar as possible. Events of force majeure as well as other impediments that the company or its suppliers cannot prevent by exercising diligence or exerting influence shall invariably lead to an extension of the delivery period or entitle the company to rescind the contract without the client being entitled to claims therefrom under these GT&Cs. 
+
+Unless otherwise agreed between the parties to the contract, shipment shall take place at the client's risk and expense (including insurance cover) from the time of hand-over to the shipment service provider. 
+
+2. Installation and Commissioning 
+
+The company shall take on the installation and commissioning of equipment or software exclusively on the basis of a separate written agreement, in which the scope of the support services made available in connection with the installation may also be laid down, e.g. training, support in the case of installations and tests, or advising. 
+
+The company shall, insofar as available, provide the documentation envisaged for use, in the respective version available. Any provision of documentation for use of the software by the client shall take place voluntarily and without any guarantee.  
+
+ 
+
+The Management								As of: 1 July 2021 
