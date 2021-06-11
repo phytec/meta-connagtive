@@ -7,7 +7,7 @@ Type=simple
 Restart=always
 RestartSec=60
 User=root
-ExecStart=/usr/bin/remotemanager
+ExecStart=/bin/sh -c '[ $(/usr/bin/jq .awsclient < /mnt/config/aws/config/esec.config | grep start | wc -l) -eq 1 ] && /usr/bin/remotemanager || { echo "Contract has not been accepted yet"; exit 2; }'
 WorkingDirectory=/mnt/config/esec/
 
 [Install]
