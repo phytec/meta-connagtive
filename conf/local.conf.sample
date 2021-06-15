@@ -83,7 +83,7 @@ DEBUG_BUILD_pn-barebox = "1"
 EXTRA_IMAGE_FEATURES = ""
 # - "Makes an image suitable for development (e.g. allows root logins without
 #    passwords and enables post-installation logging)"
-EXTRA_IMAGE_FEATURES += "debug-tweaks"
+#EXTRA_IMAGE_FEATURES += "debug-tweaks"
 # - "Installs debug symbol packages for all packages installed in a given
 #    image."
 #EXTRA_IMAGE_FEATURES += "dbg-pkgs"
