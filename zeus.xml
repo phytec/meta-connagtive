@@ -63,9 +63,7 @@
   <project name="meta-phytec" path="sources/meta-phytec" remote="git.phytec">
     <copyfile dest="tools/init" src="scripts/init"/>
   </project>
-  <project name="phytec/meta-connagtive" path="sources/meta-connagtive" remote="github">
-    <sublayer path="meta-tpm"/>
-  </project>
+  <project name="phytec/meta-connagtive" path="sources/meta-connagtive" remote="github"/>
 
   <project name="meta-qt5/meta-qt5" path="sources/meta-qt5" remote="github" revision="21ce4c124d9a972d9122f87c64ac2773bf04c284"/>
   <project name="rauc/meta-rauc" path="sources/meta-rauc" remote="github"/>
