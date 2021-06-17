@@ -11,7 +11,7 @@ S = "${WORKDIR}"
 
 do_install() {
     install -d ${D}${bindir}
-    install -m 0500 ${S}/phytec-board-config.sh ${D}${bindir}/phytec-board-config
+    install -m 0555 ${S}/phytec-board-config.sh ${D}${bindir}/phytec-board-config
 
     install -d ${D}${datadir}/${BPN}/
     install -m 0444 ${S}/AGB_OSB-connagtive_EN.txt ${D}${datadir}/${BPN}/AGB_OSB-connagtive_EN

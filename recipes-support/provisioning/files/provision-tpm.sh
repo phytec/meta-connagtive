@@ -55,6 +55,7 @@ while true; do
     (-c|--clear)
         tpm2_clear
         rm -rf /mnt/config/tpm2/*
+        rm -rf /mnt/config/.ssh/*
         exit 0
         ;;
     (--)
@@ -240,7 +241,7 @@ setup_caroot
 create_csrconf
 
 # make path for tpm2-pkcs11 metadata
-mkdir -p /mnt/config/tpm2/pkcs11
+mkdir -p /mnt/config/tpm2/pkcs11 --mode=775
 
 # TPM Remote Attestation
 tss2_provision
@@ -265,3 +266,7 @@ $tpm2pkcs11tool -w "${CA_DIR}/devcrt.pem" -y cert -a iotdm-cert --pin ${TPM_PIN}
 $tpm2pkcs11tool -w "${CA_PEM}" -y cert -a iotdm-subcert --pin ${TPM_PIN} -d 3
 # Write root CA cert
 $tpm2pkcs11tool -w "${ROOTCA_PEM}" -y cert -a iotdm-rootcert --pin ${TPM_PIN} -d 4
+
+#ssh keys
+mkdir -p /mnt/config/.ssh --mode=750
+ssh-keygen -t ecdsa -b 521 -f /mnt/config/.ssh/id_ecdsa -N "" -q

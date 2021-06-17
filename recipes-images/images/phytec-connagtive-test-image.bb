@@ -3,8 +3,7 @@ DESCRIPTION = "no graphics support in this image"
 LICENSE = "MIT"
 inherit core-image
 
-include security/userauthentication.inc
-include security/simple-fitimage.inc
+require recipes-images/images/security/setrootpassword.inc
 
 IMAGE_ROOTFS_SIZE ?= "8192"
 
@@ -33,6 +32,8 @@ IMAGE_INSTALL = " \
     phytec-board-config \
     blink-led \
     remotemanager \
+    ${@bb.utils.contains("DISTRO_FEATURES", "protectionshield", "connagtive-kit-user", "", d)} \
+    connagtive-whitelist \
 "
 
 IMAGE_INSTALL_append_mx6 = " firmwared"
