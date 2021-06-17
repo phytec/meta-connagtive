@@ -35,6 +35,7 @@ ESECCONFIG="esec.config"
 HAWKBITCONFIG_PATH="${CONFIG_PATH}/hawkbit/"
 REMOTEMANAGER_PATH="${CONFIG_PATH}/esec/"
 SSHPUBKEY_PATH="${CONFIG_PATH}/.ssh/"
+AUTHENT_FILE="${REMOTEMANAGER_PATH}.google_authenticator"
 
 TPM_PIN=$(cat /sys/devices/soc0/soc_uid | head -c 7)
 
@@ -95,7 +96,7 @@ ${txta}" $WT_HEIGHT $WT_WIDTH
 }
 #export all certs from tpm
 do_extractcert() {
-    mkdir -p ${AWSCONFIG_CERTPATH}
+    mkdir -p ${AWSCONFIG_CERTPATH} --mode=777
     #dev cert
     $tpm2pkcs11tool -r -y cert -a iotdm-cert > ${AWSCONFIG_CERTPATH}/devcert.der
     openssl x509 -inform DER -in ${AWSCONFIG_CERTPATH}/devcert.der -outform PEM -out ${AWSCONFIG_CERTPATH}/devcert.pem
@@ -114,10 +115,9 @@ get_devcertserial () {
 }
 
 do_awsconfig() {
-    mkdir -p ${AWSCONFIG_CONFPATH}
-    mkdir -p ${HAWKBITCONFIG_PATH}
-    mkdir -p ${REMOTEMANAGER_PATH}
-    mkdir -p ${SSHPUBKEY_PATH}
+    mkdir -p ${AWSCONFIG_CONFPATH} --mode=775
+    mkdir -p ${HAWKBITCONFIG_PATH} --mode=775
+    mkdir -p ${REMOTEMANAGER_PATH} --mode=775
 
     get_devcertserial
     FILE=${AWSCONFIG_CONFPATH}/config.json
@@ -170,9 +170,9 @@ do_awsconfig() {
 
   "maintenance_task_temp_download_dir": "/tmp/",
   "maintenance_task_download_whitelist_path":
-  "/mnt/config/aws/config/download_whitelist.txt",
+  "/etc/aws/config/download_whitelist.txt",
   "maintenance_task_command_whitelist_path":
-  "/mnt/config/aws/config/command_whitelist.txt",
+  "/etc/aws/config/command_whitelist.txt",
 
   "desired_hawkbit_server_url": "",
 
@@ -186,7 +186,7 @@ fi
 do_esecawsconf() {
     FILE="${AWSCONFIG_CONFPATH}/${ESECCONFIG}"
     if [ ! -f "${FILE}" ]; then
-        mkdir -p ${AWSCONFIG_CONFPATH}
+        mkdir -p ${AWSCONFIG_CONFPATH} --mode=775
         cat > ${FILE} <<EOF
 {
    "eseccontract" : {
@@ -234,9 +234,11 @@ set_awsclient(){
 }
 
 do_opensslconfig() {
-    mkdir -p ${AWSCONFIG_CONFPATH}
-    export OPENSSL_CONF=${AWSCONFIG_CONFPATH}/openssl_curl.cnf
-    cat > ${AWSCONFIG_CONFPATH}/openssl_curl.cnf <<EOF
+    mkdir -p ${AWSCONFIG_CONFPATH} --mode=775
+    FILE=${AWSCONFIG_CONFPATH}/openssl_curl.cnf
+    export OPENSSL_CONF=${FILE}
+    if [ ! -f "${FILE}" ]; then
+        cat > ${FILE} <<EOF
 openssl_conf = openssl_init
 
 [openssl_init]
@@ -251,6 +253,7 @@ MODULE_PATH = /usr/lib/libtpm2_pkcs11.so.0
 PIN = my_pin
 init = 0
 EOF
+    fi
 }
 
 do_clearAWSCONFIG() {
@@ -345,6 +348,7 @@ The next steps are:
         echo "response: ${response}"
         echo "After a successful onboarding the awsclient needs to be rerun with 'systemctl restart awsclient' three times."
     fi
+    do_getauthenticator
     return 0
 }
 
@@ -369,6 +373,62 @@ do_restart_awsclient() {
     systemctl restart awsclient
     systemctl restart awsclient
     systemctl restart awsclient
+
+do_login() {
+    login_state=$(awk '/common-auth/ { if (substr($1,1,1) ~ /^[# ]/ ) print 1; else print 0}' /etc/pam.d/${2})
+    password_state="ON"
+    google_state="OFF"
+    if [ ${login_state} -eq 1 ]; then
+        password_state="OFF"
+        google_state="ON"
+    fi
+    login_newstate=$(whiptail --radiolist "Choose the ROOT Verification for" 20 60 10 \
+        "0" "Static Password" $password_state \
+        "1" "One-time Password (IoT Device Suite platform)" $google_state \
+        3>&1 1>&2 2>&3)
+
+    RET=$?
+    if [ $RET -eq 0 ]; then
+        if [ ${login_state} -ne ${login_newstate} ]; then
+            if [ ${login_newstate} -eq 0 ]; then
+                do_login_password ${2}
+            else
+                do_login_authenticator ${2}
+            fi
+        fi
+    fi
+}
+
+do_getauthenticator() {
+    response=$(curl --cacert ${AWSCONFIG_CERTPATH}/rootcert.pem --engine pkcs11 --key-type ENG --key "${PRIVATEKEYURI};pin-value=${TPM_PIN}" --cert ${AWSCONFIG_CERTPATH}/devcert.pem https://devices.aws.esec-experts.com/ownership/ssh_keys)
+    if [ $? -ne 0 ]; then
+       return 1
+    fi
+    devicekey=$(echo ${response} | jq .DEVICE_KEY | tr -d '"' | tr -d "=")
+    scratchcode=$(echo ${response} | jq .SCRATCH_CODES | tr -d '"' | tr -d ',')
+    cat > ${AUTHENT_FILE} <<EOF
+${devicekey}
+" RATE_LIMIT 3 30
+" WINDOW_SIZE 17
+" HOTP_COUNTER 1
+$(echo ${scratchcode} | cut -d ' ' -f 2)
+$(echo ${scratchcode} | cut -d ' ' -f 3)
+$(echo ${scratchcode} | cut -d ' ' -f 4)
+EOF
+chmod 400 ${AUTHENT_FILE}
+}
+
+#parameter sshd or login
+do_login_authenticator() {
+    #set google authenticator for ssh
+    sed -i '/pam_google_authenticator.so/s/^#//g' /etc/pam.d/$1
+    sed -i '/common-auth/s/^/#/g' /etc/pam.d/$1
+}
+
+do_login_password() {
+    #set Password for ssh
+    sed -i '/common-auth/s/^#//g' /etc/pam.d/$1
+    sed -i '/pam_google_authenticator.so/s/^/#/g' /etc/pam.d/$1
 }
 
 calc_wt_size
@@ -397,6 +457,14 @@ do
         set_eseccontract
         INTERACTIVE=False
         ;;
+    -s|sshlogin)
+        do_login "SSH" "sshd"
+        exit 0
+        ;;
+    -c|consolelogin)
+        do_login "Console" "login"
+        exit 0
+        ;;
     -h|--help)
         echo "$usage"
         exit 0
@@ -415,7 +483,7 @@ if [ "$INTERACTIVE" = True ]; then
         FUN=$(whiptail --title "PHYTEC - Connagtive IoT Device Configuration Tool" --backtitle "$(tr -d '\0' < /proc/device-tree/model)" --menu "Setup Options" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT --cancel-button Finish --ok-button Select \
             "1 New Account and Onboarding" "" \
             "2 Onboarding with existing Account" "" \
-            "3 Login Settings for Console" "" \
+            "3 Login Settings for Serial Console" "" \
             "4 Login Settings for SSH" "" \
             "5 Terms and Conditions" "" \
             "6 Help" "" \
