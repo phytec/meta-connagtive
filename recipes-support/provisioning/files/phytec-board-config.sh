@@ -373,6 +373,7 @@ do_restart_awsclient() {
     systemctl restart awsclient
     systemctl restart awsclient
     systemctl restart awsclient
+}
 
 do_login() {
     login_state=$(awk '/common-auth/ { if (substr($1,1,1) ~ /^[# ]/ ) print 1; else print 0}' /etc/pam.d/${2})
