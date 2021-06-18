@@ -383,7 +383,7 @@ do_login() {
         password_state="OFF"
         google_state="ON"
     fi
-    login_newstate=$(whiptail --radiolist "Choose the ROOT Verification for" 20 60 10 \
+    login_newstate=$(whiptail --radiolist "Choose the login method for $1. (Select an item with the arrow keys and spacebar)" $WT_HEIGHT $WT_WIDTH 2 \
         "0" "Static Password" $password_state \
         "1" "One-time Password (IoT Device Suite platform)" $google_state \
         3>&1 1>&2 2>&3)
