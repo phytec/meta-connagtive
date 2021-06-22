@@ -1,5 +1,6 @@
 [Unit]
 Description=LED-blink test
+After=rauc.service
 
 [Service]
 Type=simple
