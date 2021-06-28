@@ -8,6 +8,7 @@
     supported_builds="
       phyboard-polis-imx8mm-3/phytec-connagtive-test-image/yogurt-vendor-connagtive,
       phyboard-polis-imx8mm-3/phytec-connagtive-start-image/yogurt-vendor-connagtive,
+      phyboard-polis-imx8mm-3/-c populate_sdk phytec-connagtive-start-image/yogurt-vendor-connagtive,
       phyboard-polis-imx8mm-4/phytec-connagtive-start-image/yogurt-vendor-connagtive,
       phygate-tauri-l-imx8mm-1/phytec-connagtive-test-image/yogurt-vendor-connagtive,
       phygate-tauri-l-imx8mm-1/phytec-connagtive-start-image/yogurt-vendor-connagtive,
