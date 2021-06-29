@@ -2,7 +2,7 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
 CONNAGTIVE_ROOT_AUTHENTICATION ??= "password"
 
-do_install_append() {
+do_install_append_protectionshield() {
     if [ -f ${D}${sysconfdir}/pam.d/login ]; then
         echo "auth required pam_google_authenticator.so echo_verification_code no_increment_hotp [secret=/mnt/config/esec/.google_authenticator]" >> ${D}${sysconfdir}/pam.d/login
 
