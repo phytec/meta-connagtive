@@ -54,9 +54,6 @@ BB_DISKMON_DIRS ??= "\
 # This variable is ordering dependend.
 #IMAGE_FSTYPES = "tar.gz wic ubifs emmc"
 
-# Select a preconfigured A/B system setup for SD/eMMC images.
-WKS_FILES_mx8mm = "imx8mm-connagtive-sdimage.wks"
-
 # Turn on debugging options of the kernel
 DEBUG_BUILD_pn-linux-mainline = "1"
 # Turn on debugging options of the imx kernel
