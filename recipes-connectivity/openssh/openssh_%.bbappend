@@ -2,9 +2,9 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/${BPN}:"
 
 CONNAGTIVE_ROOT_AUTHENTICATION ??= "password"
 
-SRC_URI_append = " file://sshd_check_keys_connagtive"
+SRC_URI_append_protectionshield = " file://sshd_check_keys_connagtive"
 
-do_install_append() {
+do_install_append_protectionshield() {
     install -D -m 0755 ${WORKDIR}/sshd_check_keys_connagtive ${D}${libexecdir}/${BPN}/sshd_check_keys
 
     sed -i -e 's:#ChallengeResponseAuthentication yes:ChallengeResponseAuthentication yes:' ${D}${sysconfdir}/ssh/sshd_config
