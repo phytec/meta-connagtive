@@ -1,5 +1,5 @@
 [Unit]
-Description=OSB AWS Client
+Description=connagtive AWS Client
 After=network.target
 
 [Service]
