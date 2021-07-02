@@ -492,6 +492,9 @@ if [ "$INTERACTIVE" = True ]; then
             3>&1 1>&2 2>&3)
         RET=$?
         if [ $RET -eq 1 ]; then
+            if [ ! -z "$FUN" ]; then
+                echo "$FUN"
+            fi
             exit 0
         elif [ $RET -eq 0 ]; then
             case "$FUN" in
