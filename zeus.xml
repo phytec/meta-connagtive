@@ -43,7 +43,7 @@
     <sublayer path="meta-gnome"/>
   </project>
 
-  <project name="meta-imx" path="sources/meta-imx" remote="codeaurora" revision="refs/tags/rel_imx_5.4.70_2.3.0" upstream="zeus-5.4.70-2.3.0">
+  <project name="meta-imx" path="sources/meta-imx" remote="codeaurora" revision="refs/tags/rel_imx_5.4.70_2.3.2" upstream="zeus-5.4.70-2.3.2">
     <linkfile dest="imx-setup-release.sh" src="tools/imx-setup-release.sh"/>
     <linkfile dest="README-IMXBSP" src="README"/>
     <ignorebaselayer/>
