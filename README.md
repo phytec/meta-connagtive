@@ -1,36 +1,44 @@
 meta-connagtive
 ===============
 
-> **Note:** This layer is currently **work-in-progress** and should not be used
-> for production-ready products.
->
-> More information about the functionality and the offer will be published with
-> the first offical release.
+This layer adds support for the [Connagtive IoT Device Suite](https://phytec.iot-suite.io/login)
+on PHYTEC boards. In particular, PHYTEC's [Update & Device Management Kit](https://www.phytec.de/en/produkte/development-kits/update-und-devicemanagement-kit/)
+demonstrates the functionalities of the Connagtive IoT Device Suite.
 
-This layer adds support for the [Connagtive IoT Device
-Suite](https://iot.aws.esec-experts.com) on PHYTEC boards.
+A full documentation about the Connagtive IoT Device Suite can be found here:
+https://doc.iot-suite.io For general support on the IoT Device Suite you can
+contact the Connagtive support directly at [support@iot-suite.io](mailto:support@iot-suite.io).
 
-All recipes are provided under the MIT licensing terms unless otherwise noted.
+Contributing
+============
 
-If you experience any problem with this software, please contact our
-<support@phytec.de> or the maintainer directly. Please try to do the following
-first:
+We welcome any contributions from you here on GitHub! If you have a general
+problem with this Yocto layer or a software issue with the [Update & Device Management Kit](https://www.phytec.de/en/produkte/development-kits/update-und-devicemanagement-kit/),
+open a new issue. When opening a new issue, please be as descriptive as
+possible. Information about your hardware and software setup, as well as your
+currently used version of the software greatly helps in debugging the problem.
 
-* Look in the [Yocto Project Bugzilla](http://bugzilla.yoctoproject.org/)
-  to see if a problem has already been reported.
-* Look through recent entries of the [Yocto mailing list
-  archives](https://lists.yoctoproject.org/pipermail/yocto/) to see if others
-  have run into similar problems or had similar questions already answered.
+If you would like to directly contribute new code or fix any issues you have the
+possibility to open a pull request.
 
 Maintainer
 ==========
 
-* Maik Otto `m.otto@phytec.de`
-* Martin Schwan `m.schwan@phytec.de`
-* Florian Schrank `f.schrank@osb-ag.de`
+* Maintainer: Martin Schwan `m.schwan@phytec.de`
+* Co-maintainer: Maik Otto `m.otto@phytec.de`
 
 Dependencies
 ============
 
-This layer depends on Openembedded-Core, Bitbake, meta-phytec and others
-depending on the branch.
+This layer depends on:
+
+* Openembedded core
+* Bitbake
+* meta-phytec
+* meta-yogurt
+* meta-rauc
+
+License
+=======
+
+All recipes are provided under the MIT licensing terms unless otherwise noted.
