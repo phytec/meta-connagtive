@@ -2,70 +2,6 @@
 # SPDX-License-Identifier: GPL-2.0
 # Copyright (c) 2021 PHYTEC Messtechnik GmbH
 
-USEHSM=1
-CA_P12=""
-CA_ROOT=""
-HSMCERT_LABEL=""
-HSM_USER_PIN=""
-
-USAGE="\
-Usage:  $(basename $0) -p P12CONTAINER -r ROOTCA
-        $(basename $0) -l HSMLABEL -P HSMPIN -r ROOTCA
-        $(basename $0) -c
-
-Initially provision certificate and key to a TPM.
-
-Options:
-  -p, --pkcs12=CONTAINER   Path to PKCS#12 container with certificate and private key
-  -r, --rootca=ROOTCA      Path to root CA certificate
-  -l, --label=LABEL        Label for certificate and key in HSM
-  -P, --pin=PIN            HSM user PIN
-  -c, --clear              Clear the TPM and any generated metadata
-  -h, --help               Print this help
-"
-
-ARGS=$(getopt -o 'hp:r:l::P::c::' -l 'help,pkcs12:,rootca:,label::,pin::,clear' -- "$@") || exit
-eval set -- "$ARGS"
-unset ARGS
-
-while true; do
-    case $1 in
-    (-h|--help)
-        echo "$USAGE"
-        exit 0
-        ;;
-    (-p|--pkcs12)
-        USEHSM=0
-        CA_P12=$2
-        shift 2
-        ;;
-    (-l|--label)
-        USEHSM=1
-        HSMCERT_LABEL=$2
-        shift 2
-        ;;
-    (-r|--rootca)
-        CA_ROOT=$2
-        shift 2
-        ;;
-    (-P|--pin)
-        HSM_USER_PIN=$2
-        shift 2
-        ;;
-    (-c|--clear)
-        tpm2_clear
-        rm -rf /mnt/config/tpm2/*
-        rm -rf /mnt/config/.ssh/*
-        exit 0
-        ;;
-    (--)
-        shift
-        break;;
-    (*)
-        exit 1;;
-    esac
-done
-
 set -e
 trap end EXIT
 end() {
@@ -73,6 +9,12 @@ end() {
         echo "Failed provisioning to TPM!" 1>&2
     fi
 }
+
+USEHSM=1
+CA_P12=""
+CA_ROOT=""
+HSMCERT_LABEL=""
+HSM_USER_PIN=""
 
 # Variable declaration
 CA_DIR=$(mktemp -d -t tpm2tmpca.XXXXXX)
@@ -83,6 +25,38 @@ hsmpkcs11tool='pkcs11-tool --module /usr/lib/opensc-pkcs11.so'
 # Generate SO-PIN
 TPM_SOPIN=$(tpm2_getrandom --hex 8 | tr -dc 0-9)
 TPM_PIN=$(cat /sys/devices/soc0/soc_uid | head -c 7)
+
+USAGE="\
+Usage:  $(basename $0) --p12init P12CONTAINER ROOTCA
+        $(basename $0) --hsminit HSMLABEL HSMPIN
+        $(basename $0) --csrequest
+        $(basename $0) --writeca DEVICECA SUBCA ROOTCA
+        $(basename $0) --clear
+
+Initially provision certificate and key to a TPM.
+
+Options:
+  --p12init             Initialization with a PKCS#12 container
+    P12CONTAINER        Path to PKCS#12 container with certificate and
+                        private key
+    ROOTCA              Path to root CA certificate
+
+  --hsminit             Initialization with a HSM
+    HSMLABEL            Label for certificate and key in HSM
+    HSMPIN              HSM user PIN
+
+  --csrrequest          Create keypair and Certificate signing request
+
+  --writeca             Write Certificates to the TPM
+    DEVICECA            Path to device CA certificate
+    SUBCA               Path to intermediate CA certificate
+    ROOTCA              Path to root CA certificate
+
+  -c |--clear           Clear the TPM and any generated metadata
+
+  -h | --help           Print this help
+
+"
 
 # Create Dev UID
 setup_devuid() {
@@ -231,42 +205,121 @@ read_ekcerttpm() {
     openssl x509 -inform DER -outform PEM -text -in "${CA_EKCERT}.der" -out "${CA_EKCERT}"
 }
 
+create_keycsr() {
+    # Create CSR Conf
+    create_csrconf
+
+    # make path for tpm2-pkcs11 metadata
+    mkdir -p /mnt/config/tpm2/pkcs11 --mode=775
+
+    # TPM Remote Attestation
+    tss2_provision
+
+    # Init Token for Device Certificate
+    $tpm2pkcs11tool --init-token --label=iotdm --so-pin=${TPM_SOPIN}
+    # Set user pin
+    $tpm2pkcs11tool --label="iotdm" --init-pin --so-pin ${TPM_SOPIN} --pin ${TPM_PIN}
+    # Create Keypair for Device Certificate
+    $tpm2pkcs11tool --label="iotdm-keypair" --login --pin=${TPM_PIN} --keypairgen --usage-sign --key-type EC:prime256v1 -d 1
+    # Create CSR
+    openssl req -config "${CA_DIR}/csrtpm.cnf" -new -engine pkcs11 -keyform engine -key "pkcs11:model=SLB9670;manufacturer=Infineon;token=iotdm;object=iotdm-keypair;type=private;pin-value=${TPM_PIN}" -out "${CA_DIR}/devcsr.pem"
+
+}
+
+create_certs(){
+    # Create Sub-CA
+    setup_casub
+    # Create Root CA
+    setup_caroot
+    # Create Device Cert
+    if [ $USEHSM -eq 1 ]; then
+        openssl ca -config "${CA_DIR}/ssl.cnf" -batch -engine pkcs11 -keyform engine -keyfile "slot_0-label_${HSMCERT_LABEL}" -in "${CA_DIR}/devcsr.pem" -out "${CA_DIR}/devcrt.pem" -passin pass:${HSM_USER_PIN}
+    else
+        openssl ca -config "${CA_DIR}/ssl.cnf" -batch -in "${CA_DIR}/devcsr.pem" -out "${CA_DIR}/devcrt.pem"
+    fi
+
+}
+
+
+write_certsssh(){
+    if [ $# -eq 3 ]; then
+        # Write Device Cert
+        $tpm2pkcs11tool -w "${1}" -y cert -a iotdm-cert --pin ${TPM_PIN} -d 2
+        # Write Sub CA Cert
+        $tpm2pkcs11tool -w "${2}" -y cert -a iotdm-subcert --pin ${TPM_PIN} -d 3
+        # Write root CA cert
+        $tpm2pkcs11tool -w "${3}" -y cert -a iotdm-rootcert --pin ${TPM_PIN} -d 4
+
+        #ssh keys
+        mkdir -p /mnt/config/.ssh --mode=750
+        ssh-keygen -t ecdsa -b 521 -f /mnt/config/.ssh/id_ecdsa -N "" -q
+    else
+        echo "[ERROR] Wrong number of parameters"
+        exit 1
+    fi
+}
+
 setup_devuid
 setup_devcn
-# Create Sub-CA
-setup_casub
-# Create Root CA
-setup_caroot
-# Create CSR Conf
-create_csrconf
 
-# make path for tpm2-pkcs11 metadata
-mkdir -p /mnt/config/tpm2/pkcs11 --mode=775
+ARGS=$(getopt -o 'hc' -l 'help,p12init::,hsminit::,csrrequest,writeca::,clear' -- "$@") || exit
+eval set -- "$ARGS"
+unset ARGS
 
-# TPM Remote Attestation
-tss2_provision
-
-# Init Token for Device Certificate
-$tpm2pkcs11tool --init-token --label=iotdm --so-pin=${TPM_SOPIN}
-# Set user pin
-$tpm2pkcs11tool --label="iotdm" --init-pin --so-pin ${TPM_SOPIN} --pin ${TPM_PIN}
-# Create Keypair for Device Certificate
-$tpm2pkcs11tool --label="iotdm-keypair" --login --pin=${TPM_PIN} --keypairgen --usage-sign --key-type EC:prime256v1 -d 1
-# Create CSR
-openssl req -config "${CA_DIR}/csrtpm.cnf" -new -engine pkcs11 -keyform engine -key "pkcs11:model=SLB9670;manufacturer=Infineon;token=iotdm;object=iotdm-keypair;type=private;pin-value=${TPM_PIN}" -out "${CA_DIR}/devcsr.pem"
-# Create Device Cert
-if [ $USEHSM -eq 1 ]; then
-    openssl ca -config "${CA_DIR}/ssl.cnf" -batch -engine pkcs11 -keyform engine -keyfile "slot_0-label_${HSMCERT_LABEL}" -in "${CA_DIR}/devcsr.pem" -out "${CA_DIR}/devcrt.pem" -passin pass:${HSM_USER_PIN}
-else
-    openssl ca -config "${CA_DIR}/ssl.cnf" -batch -in "${CA_DIR}/devcsr.pem" -out "${CA_DIR}/devcrt.pem"
-fi
-# Write Device Cert
-$tpm2pkcs11tool -w "${CA_DIR}/devcrt.pem" -y cert -a iotdm-cert --pin ${TPM_PIN} -d 2
-# Write Sub CA Cert
-$tpm2pkcs11tool -w "${CA_PEM}" -y cert -a iotdm-subcert --pin ${TPM_PIN} -d 3
-# Write root CA cert
-$tpm2pkcs11tool -w "${ROOTCA_PEM}" -y cert -a iotdm-rootcert --pin ${TPM_PIN} -d 4
-
-#ssh keys
-mkdir -p /mnt/config/.ssh --mode=750
-ssh-keygen -t ecdsa -b 521 -f /mnt/config/.ssh/id_ecdsa -N "" -q
+while true; do
+    case $1 in
+    (-h|--help)
+        echo "$USAGE"
+        exit 0
+        ;;
+    (--p12init)
+        shift 2
+        echo "p12 init: $2 $3"
+        USEHSM=0
+        CA_P12=$2
+        CA_ROOT=$3
+        create_keycsr
+        create_certs
+        write_certsssh ${CA_DIR}/devcrt.pem ${CA_PEM} ${ROOTCA_PEM}
+        exit 0
+        ;;
+    (--hsminit)
+        shift 2
+        echo "hsm init: $2 $3"
+        USEHSM=1
+        HSMCERT_LABEL=$2
+        HSM_USER_PIN=$3
+        create_keycsr
+        create_certs
+        write_certsssh ${CA_DIR}/devcrt.pem ${CA_PEM} ${ROOTCA_PEM}
+        exit 0
+        ;;
+    (--csrrequest)
+        echo "key csr"
+        create_keycsr
+        echo "Please send Certificate Signing Request"
+        echo "${CA_DIR}/devcsr.pem"
+        echo "to support@phytec.de"
+        exit 0
+        ;;
+    (--writeca)
+        shift 2
+        echo "write certs: $2 $3 $4"
+        write_certsssh $2 $3 $4
+        exit 0
+        ;;
+    (-c|--clear)
+        echo "clear"
+        tpm2_clear
+        rm -rf /mnt/config/tpm2/*
+        rm -rf /mnt/config/.ssh/*
+        rm -rf /tmp/tpm2tmpca*
+        exit 0
+        ;;
+    (--)
+        shift
+        break;;
+    (*)
+        exit 1;;
+    esac
+done
