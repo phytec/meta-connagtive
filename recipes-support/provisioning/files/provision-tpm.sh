@@ -153,7 +153,11 @@ authorityKeyIdentifier  = keyid:always,issuer
 basicConstraints        = critical, CA:false
 keyUsage                = critical, digitalSignature, keyAgreement
 extendedKeyUsage        = critical, clientAuth
-authorityInfoAccess     = OCSP;URI:http://ocsp.testing.aws.esec-experts.com
+authorityInfoAccess     = OCSP;URI:http://ocsp.aws.esec-experts.com
+crlDistributionPoints   = @crl_section
+
+[crl_section]
+URI.1 = http://crl.aws.esec-experts.com/OSBG1-REVOCATION_LIST.rev.der
 
 [ engine_section ]
 pkcs11  = pkcs11_section
