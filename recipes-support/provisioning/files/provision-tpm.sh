@@ -62,19 +62,26 @@ Options:
 setup_devuid() {
     read_ekcerttpm
     ekid=$(openssl x509 -noout -serial -in "${CA_EKCERT}" | cut -d '=' -f 2 | tr '[A-Z]' '[a-z]')
-    randid=$(tpm2_getrandom --hex 2 | tr '[A-Z]' '[a-z]')
-    export DEV_UID="${ekid}${randid}"
+    DEV_UID="$(printf "%x%x" "$(date +%Y)" "$(date +%j)")${ekid}"
+    len=`expr 20 - ${#DEV_UID}`
+    let "len=len/2"
+    [ $len -gt 0 ] && DEV_UID="${DEV_UID}$(tpm2_getrandom --hex ${len})"
+    [ `expr ${#DEV_UID} % 2` -ne 0 ] && DEV_UID="${DEV_UID}$(tpm2_getrandom --hex 1 | cut -c 1)"
+    export DEV_UID=$(echo ${DEV_UID} | tr '[A-Z]' '[a-z]')
+    if [ ${#DEV_UID} -gt 20 ]; then
+        echo "[ERROR] DEV_UID is too long"
+        exit 1
+    fi
 }
 
 # Create Device Common Name
 setup_devcn() {
-    val=$(cat /proc/device-tree/model | cut -d ' ' -f 2 | cut -d '-' -f 1)
     soc=$(cat /sys/devices/soc0/soc_id | tr -d '.')
-    export DEV_CN="${val}-${soc}-${DEV_UID}"
+    export DEV_CN="PHY-${soc}-${DEV_UID}"
     if [ ${#DEV_CN} -gt 32 ]; then
-        DEV_CN="phy-${soc}-${DEV_UID}"
+        echo "[ERROR] DEV_CN is too long"
+        exit 1
     fi
-    export DEV_CN
 }
 
 # Init Root Certificate
