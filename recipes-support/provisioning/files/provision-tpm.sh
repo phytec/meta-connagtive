@@ -285,7 +285,7 @@ while true; do
         ;;
     (--p12init)
         shift 2
-        echo "p12 init: $2 $3"
+        echo "p12 init"
         USEHSM=0
         CA_P12=$2
         CA_ROOT=$3
@@ -296,7 +296,7 @@ while true; do
         ;;
     (--hsminit)
         shift 2
-        echo "hsm init: $2 $3"
+        echo "hsm init"
         USEHSM=1
         HSMCERT_LABEL=$2
         HSM_USER_PIN=$3
@@ -315,7 +315,7 @@ while true; do
         ;;
     (--writeca)
         shift 2
-        echo "write certs: $2 $3 $4"
+        echo "write certs"
         write_certsssh $2 $3 $4
         exit 0
         ;;
