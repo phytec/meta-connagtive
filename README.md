@@ -6,8 +6,9 @@ on PHYTEC boards. In particular, PHYTEC's [Update & Device Management Kit](https
 demonstrates the functionalities of the Connagtive IoT Device Suite.
 
 A full documentation about the Connagtive IoT Device Suite can be found here:
-https://doc.iot-suite.io For general support on the IoT Device Suite you can
-contact the Connagtive support directly at [support@iot-suite.io](mailto:support@iot-suite.io).
+https://osb-connagtive.atlassian.net/wiki/spaces/AIDSD/ For general support on
+the IoT Device Suite you can contact the Connagtive support directly at
+[support@iot-suite.io](mailto:support@iot-suite.io).
 
 Contributing
 ============
