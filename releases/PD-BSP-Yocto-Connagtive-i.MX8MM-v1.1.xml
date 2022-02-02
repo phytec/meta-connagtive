@@ -1,0 +1,79 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<manifest>
+  <phytec pdn="PD1.1" release_type="topic" release_uid="BSP-Yocto-Connagtive-i.MX8MM-v1.1" bspextension="Connagtive" soc="iMX8MM" build_container="crops/poky:ubuntu-18.04" supported_builds="
+    phyboard-polis-imx8mm-3/-c populate_sdk phytec-connagtive-start-image/yogurt-vendor-connagtive,
+    phyboard-polis-imx8mm-3/phytec-connagtive-provisioning-image/yogurt-vendor-connagtive-provisioning,
+    phyboard-polis-imx8mm-3/phytec-connagtive-start-bundle/yogurt-vendor-connagtive,
+    phyboard-polis-imx8mm-3/phytec-connagtive-start-image/yogurt-vendor-connagtive,
+    phyboard-polis-imx8mm-3/phytec-connagtive-test-image/yogurt-vendor-connagtive,
+    phyboard-polis-imx8mm-4/phytec-connagtive-start-bundle/yogurt-vendor-connagtive,
+    phyboard-polis-imx8mm-4/phytec-connagtive-start-image/yogurt-vendor-connagtive,
+    phygate-tauri-l-imx8mm-1/phytec-connagtive-provisioning-image/yogurt-vendor-connagtive-provisioning,
+    phygate-tauri-l-imx8mm-1/phytec-connagtive-start-bundle/yogurt-vendor-connagtive,
+    phygate-tauri-l-imx8mm-1/phytec-connagtive-start-image/yogurt-vendor-connagtive,
+    phygate-tauri-l-imx8mm-1/phytec-connagtive-test-image/yogurt-vendor-connagtive,
+    phygate-tauri-l-imx8mm-2/phytec-connagtive-start-bundle/yogurt-vendor-connagtive,
+    phygate-tauri-l-imx8mm-2/phytec-connagtive-start-image/yogurt-vendor-connagtive
+  " />
+
+  <remote fetch="https://git.yoctoproject.org/git" name="yocto" />
+  <remote fetch="git://git.openembedded.org" name="openembedded" />
+  <remote fetch="git://github.com" name="github" />
+  <remote fetch="https://source.codeaurora.org/external/imx" name="codeaurora" />
+  <remote name="git.phytec" fetch="git://git.phytec.de" />
+  <remote name="ssh.phytec" fetch="ssh://git@git.phytec.de" />
+
+  <default revision="zeus" sync-j="2" remote="git.phytec" />
+
+  <project name="poky" path="sources/poky" remote="yocto" revision="d88d62c20d7d8da85f02edb170dae0280624ad7e">
+    <ignorebaselayer />
+    <sublayer path="meta" />
+    <sublayer path="meta-poky" />
+  </project>
+
+  <project name="openembedded/meta-openembedded" path="sources/meta-openembedded" remote="github" revision="2b5dd1eb81cd08bc065bc76125f2856e9383e98b">
+    <ignorebaselayer />
+    <sublayer path="meta-oe" />
+    <sublayer path="meta-networking" />
+    <sublayer path="meta-python" />
+    <sublayer path="meta-multimedia" />
+    <sublayer path="meta-filesystems" />
+    <sublayer path="meta-perl" />
+    <sublayer path="meta-gnome" />
+  </project>
+
+  <project name="meta-imx" path="sources/meta-imx" remote="codeaurora" revision="63665ab70ca609451533101cded2a620b340768c" upstream="zeus-5.4.70-2.3.0">
+    <linkfile dest="imx-setup-release.sh" src="tools/imx-setup-release.sh" />
+    <linkfile dest="README-IMXBSP" src="README" />
+    <ignorebaselayer />
+    <sublayer path="meta-bsp" />
+    <sublayer path="meta-sdk" />
+    <sublayer path="meta-ml" />
+  </project>
+
+  <project name="Freescale/fsl-community-bsp-base" path="sources/base" remote="github" revision="01488a237cdf45b3087420e169c9f67b84fd7373">
+    <linkfile dest="README" src="README" />
+    <linkfile dest="setup-environment" src="setup-environment" />
+    <ignorebaselayer />
+  </project>
+
+  <project name="OSSystems/meta-browser" path="sources/meta-browser" remote="github" revision="ee3be3b5986a4aa0e73df2204a625ae1fe5df37e" />
+  <project name="kraj/meta-clang" path="sources/meta-clang" remote="github" revision="711e593d5984aad3bf35c51b7ac4482982bc16c7" />
+  <project name="Freescale/meta-freescale" path="sources/meta-freescale" remote="github" revision="14f1a630a47375432f93c556927b879b51d84c4e" />
+  <project name="Freescale/meta-freescale-3rdparty" path="sources/meta-freescale-3rdparty" remote="github" revision="dbcc686f52c3c84db8cb86aa8973a4e373651b98" />
+  <project name="Freescale/meta-freescale-distro" path="sources/meta-freescale-distro" remote="github" revision="ca27d12e4964d1336e662bcc60184bbff526c857" />
+
+  <project name="meta-yogurt" path="sources/meta-yogurt" remote="git.phytec" revision="b80bc94fa73e897c7424cb4c7a83f8ad30e00ccb" />
+  <project name="meta-phytec" path="sources/meta-phytec" remote="git.phytec" revision="ecdf5e72b06f02fc4699ed9dd3a4af2f21ff9f1b">
+    <copyfile dest="tools/init" src="scripts/init" />
+  </project>
+  <project name="phytec/meta-connagtive" path="sources/meta-connagtive" remote="github" revision="c0d80ba35c5f1ee2947a5706b4dc3a894da5e181" />
+
+  <project name="meta-qt5/meta-qt5" path="sources/meta-qt5" remote="github" revision="21ce4c124d9a972d9122f87c64ac2773bf04c284" />
+  <project name="rauc/meta-rauc" path="sources/meta-rauc" remote="github" revision="cc7d622b2d49c8c7d426bb9965ad1d58806ef52f" />
+  <project name="meta-python2" path="sources/meta-python2" remote="openembedded" revision="4400f9155ec193d028208cf0c66aeed2ba2b00ab" />
+
+  <project name="meta-security" path="sources/meta-security" remote="yocto" revision="52e83e6b7e57bf352fd6770466996530dece3da5">
+      <sublayer path="meta-tpm" />
+  </project>
+</manifest>
