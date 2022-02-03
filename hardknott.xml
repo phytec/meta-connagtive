@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+  <phytec
+    pdn="hardknott"
+    release_uid="BSP-Yocto-FSL-i.MX8MM-hardknott"
+    bspextension="FSL"
+    soc="iMX8MM"
+    supported_builds="
+      phyboard-polis-imx8mm-4/phytec-connagtive-provisioning-image/ampliphy-vendor-connagtive-provisioning,
+      phyboard-polis-imx8mm-4/phytec-connagtive-test-image/ampliphy-vendor-connagtive,
+      phyboard-polis-imx8mm-4/phytec-connagtive-start-image/ampliphy-vendor-connagtive,
+      phyboard-polis-imx8mm-4/-c populate_sdk phytec-connagtive-start-image/ampliphy-vendor-connagtive,
+      phygate-tauri-l-imx8mm-2/phytec-connagtive-provisioning-image/ampliphy-vendor-connagtive-provisioning,
+      phygate-tauri-l-imx8mm-2/phytec-connagtive-test-image/ampliphy-vendor-connagtive,
+      phygate-tauri-l-imx8mm-2/phytec-connagtive-start-image/ampliphy-vendor-connagtive
+    "/>
+
+  <remote fetch="https://git.yoctoproject.org/git" name="yocto"/>
+  <remote fetch="git://git.openembedded.org" name="openembedded"/>
+  <remote fetch="git://github.com" name="github"/>
+  <remote fetch="https://source.codeaurora.org/external" name="codeaurora"/>
+  <remote name="git.phytec" fetch="git://git.phytec.de"/>
+  <remote name="ssh.phytec" fetch="ssh://git@git.phytec.de"/>
+
+  <default revision="hardknott" sync-j="2"/>
+
+  <project name="poky" path="sources/poky" remote="yocto" revision="269265c00091fa65f93de6cad32bf24f1e7f72a3">
+    <ignorebaselayer/>
+    <sublayer path="meta"/>
+    <sublayer path="meta-poky"/>
+  </project>
+
+  <project name="openembedded/meta-openembedded" path="sources/meta-openembedded" remote="github" revision="f44e1a2b575826e88b8cb2725e54a7c5d29cf94a">
+    <ignorebaselayer/>
+    <sublayer path="meta-oe"/>
+    <sublayer path="meta-networking"/>
+    <sublayer path="meta-python"/>
+    <sublayer path="meta-multimedia"/>
+    <sublayer path="meta-filesystems"/>
+    <sublayer path="meta-perl"/>
+    <sublayer path="meta-gnome"/>
+  </project>
+
+  <project name="imx/meta-imx" path="sources/meta-imx" remote="codeaurora" revision="refs/tags/rel_imx_5.10.72_2.2.0" upstream="hardknott-5.10.72-2.2.0">
+    <linkfile dest="imx-setup-release.sh" src="tools/imx-setup-release.sh"/>
+    <linkfile dest="README-IMXBSP" src="README"/>
+    <ignorebaselayer/>
+    <sublayer path="meta-bsp"/>
+    <sublayer path="meta-sdk"/>
+    <sublayer path="meta-ml"/>
+  </project>
+
+  <project name="OSSystems/meta-browser" path="sources/meta-browser" remote="github" revision="8be1d3a0ba0cf32e61144900597207af5698c10d">
+  <ignorebaselayer/>
+    <sublayer path="meta-chromium"/>
+  </project>
+  <project name="kraj/meta-clang" path="sources/meta-clang" remote="github" revision="b0d805060791006d651efd3d7ae3dd5add8f70fe"/>
+  <project name="Freescale/meta-freescale" path="sources/meta-freescale" remote="github" revision="469d6c958c76ea235b3d3c1527e797ce3a7392e3"/>
+  <project name="Freescale/meta-freescale-3rdparty" path="sources/meta-freescale-3rdparty" remote="github" revision="f8150f3b37cb83cba1f9e2378e57bb63e02d4610"/>
+  <project name="Freescale/meta-freescale-distro" path="sources/meta-freescale-distro" remote="github" revision="e6daa26ba1f748326546063d63a085ae671827d9"/>
+  <project name="imxsupport/meta-nxp-demo-experience" path="sources/meta-nxp-demo-experience" remote="codeaurora" revision="9dcc11ea9f525cffedbb28895e0abb443e56c3e0" upstream="imx_5.10.y" dest-branch="imx_5.10.y"/>
+  <project name="meta-ampliphy" path="sources/meta-ampliphy" remote="git.phytec"/>
+  <project name="meta-phytec" path="sources/meta-phytec" remote="git.phytec">
+    <copyfile dest="tools/init" src="scripts/init"/>
+  </project>
+  <project name="phytec/meta-connagtive" path="sources/meta-connagtive" remote="github"/>
+
+  <project name="meta-qt5/meta-qt5" path="sources/meta-qt5" remote="github" revision="43f8f539d40070a70fe89136db89bf5bb1dfe7ed"/>
+  <project name="rauc/meta-rauc" path="sources/meta-rauc" remote="github"/>
+  <project name="meta-python2" path="sources/meta-python2" remote="openembedded" revision="8db9e4f6ceae33d7a4f55453d31e69f9858af4eb"/>
+
+  <project name="meta-security" path="sources/meta-security" remote="yocto">
+      <sublayer path="meta-tpm"/>
+  </project>
+</manifest>
