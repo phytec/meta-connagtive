@@ -1,6 +1,8 @@
 meta-connagtive
 ===============
 
+**The hardknott branch is Work in Progress**
+
 This layer adds support for the [Connagtive IoT Device Suite](https://phytec.iot-suite.io/login)
 on PHYTEC boards. In particular, PHYTEC's [Update & Device Management Kit](https://www.phytec.de/en/produkte/development-kits/update-und-devicemanagement-kit/)
 demonstrates the functionalities of the Connagtive IoT Device Suite.
