@@ -105,6 +105,8 @@ EXTRA_IMAGE_FEATURES = ""
 # certificate location for signing bundles
 #CERT_PATH = "${TOPDIR}/../sources/meta-yogurt/openssl-ca"
 
+WKS_FILES_mx8m_update = "imx8mm-connagtive-sdimage.wks"
+
 ####################
 # QT configuration #
 ####################
