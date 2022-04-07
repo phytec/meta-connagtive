@@ -1,5 +1,5 @@
 MACHINE ?= "UNASSIGNED"
-DISTRO ?= "yogurt"
+DISTRO ?= "ampliphy"
 
 ########################
 # global configuration #
@@ -50,16 +50,27 @@ BB_DISKMON_DIRS ??= "\
 # Image configuration #
 #######################
 
+# The following line disables the autostart of the phytec-qtdemo by
+# default, but you can start the demo anytime using
+#  $ systemctl start phytec-qtdemo.service
+#SYSTEMD_AUTO_ENABLE_pn-phytec-qtdemo = "disable"
+
 # You can disable and enable FSTYPES as you wish. e.g. 'ext4'.
 # This variable is ordering dependend.
 #IMAGE_FSTYPES = "tar.gz wic ubifs emmc"
 
+# To change the variable for any imx8 machine:
+#IMAGE_FSTYPES_mx8 = "tar.gz wic ubifs emmc"
+
 # Turn on debugging options of the kernel
-DEBUG_BUILD_pn-linux-mainline = "1"
+#DEBUG_BUILD_pn-linux-mainline = "1"
 # Turn on debugging options of the imx kernel
-DEBUG_BUILD_pn-linux-imx = "1"
+#DEBUG_BUILD_pn-linux-imx = "1"
 # Turn on debugging options of the barebox
-DEBUG_BUILD_pn-barebox = "1"
+#DEBUG_BUILD_pn-barebox = "1"
+
+# Include kernel sources in SDK
+TOOLCHAIN_TARGET_TASK_append = " kernel-devsrc"
 
 # The default package class of the distro yogurt is 'package_ipk'. The first
 # value is used as the package manager to build the image and sdk. To build
@@ -94,8 +105,20 @@ EXTRA_IMAGE_FEATURES = ""
 # certificate location for signing bundles
 #CERT_PATH = "${TOPDIR}/../sources/meta-yogurt/openssl-ca"
 
+####################
+# QT configuration #
+####################
+
+# We disable qt widgets per default to save about 10 MB of storage. If
+# you need qt widget support, you can enable it with this line
+#DISTRO_FEATURES_append = " qtwidgets"
+
 CONF_VERSION = "1"
 
 # Uncomment to accept NXP EULA (needed, if any NXP / freescale layer is used)
 # EULA can then be found under ../sources/meta-freescale/EULA
 #ACCEPT_FSL_EULA = "1"
+
+# A TISDK BSP requires per default an external toolchain
+# Provide a default path that is compatible to our TISDK docker image
+TOOLCHAIN_BASE ?= "/opt/PHYTEC_BSPs"
