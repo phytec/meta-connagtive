@@ -3,13 +3,13 @@ SUMMARY = "The AWS IoT client establishes a connection to AWS IoT, executes jobs
 LICENSE = "CLOSED"
 
 SRC_URI = "\
-    https://github.com/osb-cc-esec/meta-esec-awsclient/releases/download/v${PV}/awsclient_${PV}_${TARGET_ARCH} \
+    https://github.com/iot-device-suite/meta-connagtive-device-suite/releases/download/v${PV}/awsclient_${PV}_${TARGET_ARCH} \
     file://awsclient.service \
     file://awsclient.timer \
 "
 
-SRC_URI[md5sum] = "99dbe3ae2f2bddda6a07bdb6899719a4"
-SRC_URI[sha256sum] = "6c0582ae36573b867e85c2405e7f938b78562d0b99aec46301eae549b66dbea2"
+SRC_URI[md5sum] = "d24df9d5e7ea3bb079b9240345d9f5c4"
+SRC_URI[sha256sum] = "6d9708a8a773a5041e4f480a11ad7af49a97918b3632c35bf9ad17dc05907997"
 
 DEPENDS = "curl glib-2.0 json-glib openssl"
 
