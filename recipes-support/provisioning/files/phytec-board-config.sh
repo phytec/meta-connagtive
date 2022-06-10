@@ -1,5 +1,6 @@
 #!/bin/sh
 
+version=1.1
 usage="
 PHYTEC Onboarding Tool for Connagtive IoT Device Suite Platform
 For More information: https://doc.iot-suite.io
@@ -12,14 +13,16 @@ Example:
 		$(basename $0) acceptcontract --onboarding
 
 One of the following options can be selected at a time:
-  acceptcontract                            Accept the contract and no Interface
+  -a, --acceptcontract                      Accept the contract and no Interface
   -n, --newaccount=<your mailing address>   New account and Onboarding the device
                                             for Connagtive IoT Device Suite Platform
   -o, --onboarding                          Onboarding with existing account the device
                                             for Connagtive IoT Device Suite Platform
   -s, --sshlogin                            Change Authentication for SSH
   -c, --consolelogin                        Change Authentication for Console
-  -h. --help                                This Help
+  -r, --restartawsclient                    Restart awsclient
+  -h, --help                                This Help
+  -v, --version                             Get the script version
 "
 
 INTERACTIVE=True
@@ -57,8 +60,8 @@ calc_wt_size() {
 
 do_about() {
 	whiptail --msgbox "\
-This tool provides a straightforward way of doing initial
-configuration of your PHYTEC board for the
+This tool provides a straightforward way of
+doing initial configuration of your PHYTEC board for the
 Connagtive IoT Device Suite at https://phytec.iot-suite.io.
 For more information visit https://doc.iot-suite.io." $WT_HEIGHT $WT_WIDTH 1
 	return $?
@@ -222,8 +225,6 @@ set_onboarded() {
 	vdate=$(date)
 	jsontxt=$(echo ${jsontxt} | jq --arg para timestamp --arg val "$vdate" '.onboarding[$para] =   $val')
 	echo ${jsontxt} | jq . > ${FILE}
-	set_awsclient start
-	systemctl restart awsclient
 }
 
 set_awsclient(){
@@ -338,7 +339,6 @@ The next steps are:
  4) Check the state of your device in
     your IoT Device Suite account" $WT_HEIGHT $WT_WIDTH
 		fi
-		do_restart_awsclient
 	else
 		if [ $# -eq 0 ]; then
 			set_onboarded tokendevice
@@ -348,6 +348,7 @@ The next steps are:
 		echo "response: ${response}"
 		echo "After a successful onboarding the awsclient needs to be rerun with 'systemctl restart awsclient' three times."
 	fi
+	do_restart_awsclient
 	do_getauthenticator
 	return 0
 }
@@ -369,10 +370,15 @@ do_newaccount() {
 }
 
 do_restart_awsclient() {
+	set_awsclient start
 	echo Restarting awsclient, this may take a while...
 	systemctl restart awsclient
 	systemctl restart awsclient
 	systemctl restart awsclient
+	FILE=${HAWKBITCONFIG_PATH}config.cfg
+	if [ ! -f "${FILE}" ]; then
+		set_awsclient stop
+	fi
 }
 
 do_login() {
@@ -452,20 +458,28 @@ do
 		do_newaccount
 		exit 0
 		;;
-	acceptcontract)
+	-a|--acceptcontract)
 		set_eseccontract
 		INTERACTIVE=False
 		;;
-	-s|sshlogin)
+	-s|--sshlogin)
 		do_login "SSH" "sshd"
 		exit 0
 		;;
-	-c|consolelogin)
+	-r|--restartawsclient)
+		do_restart_awsclient
+		exit 0
+		;;
+	-c|--consolelogin)
 		do_login "Console" "login"
 		exit 0
 		;;
 	-h|--help)
 		echo "$usage"
+		exit 0
+		;;
+	-v|--version)
+		echo "Version ${version}"
 		exit 0
 		;;
 	*)
@@ -484,9 +498,10 @@ if [ "$INTERACTIVE" = True ]; then
             "2 Onboarding with existing Account" "" \
             "3 Login Settings for Serial Console" "" \
             "4 Login Settings for SSH" "" \
-            "5 Terms and Conditions" "" \
-            "6 Help" "" \
-            "7 About" "" 3>&1 1>&2 2>&3)
+            "5 Restart AWSClient" "" \
+            "6 Terms and Conditions" "" \
+            "7 Help" "" \
+            "8 About" "" 3>&1 1>&2 2>&3)
 		RET=$?
 		if [ $RET -eq 1 ]; then
 			if [ ! -z "$FUN" ]; then
@@ -499,9 +514,10 @@ if [ "$INTERACTIVE" = True ]; then
 			2\ *) do_onboarding ;;
 			3\ *) do_login "Console" "login" ;;
 			4\ *) do_login "SSH" "sshd" ;;
-			5\ *) do_contract 1 ;;
-			6\ *) do_help ;;
-			7\ *) do_about ;;
+			5\ *) do_restart_awsclient ;;
+			6\ *) do_contract 1 ;;
+			7\ *) do_help ;;
+			8\ *) do_about ;;
 			*) whiptail --msgbox "Programmer error: unrecognized option" $WT_HEIGHT $WT_WIDTH 1 ;;
 			esac || whiptail --msgbox "There was an error running option $FUN" 20 60 1
 		fi
