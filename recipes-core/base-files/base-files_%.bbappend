@@ -18,6 +18,9 @@ do_install_append() {
     case "${DISTRO_FEATURES}" in
         *connagtive-provisioning*) ;;
         *)
-            install -m 0755 ${WORKDIR}/welcome-connagtive.sh ${D}${sysconfdir}/profile.d/welcome-connagtive.sh ;;
+            install -m 0755 ${WORKDIR}/welcome-connagtive.sh ${D}${sysconfdir}/profile.d/welcome-connagtive.sh
+            ln -s /mnt/config ${D}/config
+            ln -s /mnt/app ${D}/app
+            ;;
     esac
 }
