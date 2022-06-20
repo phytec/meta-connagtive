@@ -24,7 +24,7 @@ hsmpkcs11tool='pkcs11-tool --module /usr/lib/opensc-pkcs11.so'
 
 # Generate SO-PIN
 TPM_SOPIN=$(tpm2_getrandom --hex 8 | tr -dc 0-9)
-TPM_PIN=$(cat /sys/devices/soc0/soc_uid | head -c 7)
+TPM_PIN=$(cat /sys/devices/soc0/serial_number | head -c 7)
 
 USAGE="\
 Usage:  $(basename $0) --p12init P12CONTAINER ROOTCA
