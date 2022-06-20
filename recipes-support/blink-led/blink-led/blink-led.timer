@@ -1,0 +1,9 @@
+[Unit]
+Description=Periodically check RAUC status for blink-led service
+
+[Timer]
+OnActiveSec=3
+OnUnitActiveSec=3
+
+[Install]
+WantedBy=timers.target

@@ -1,9 +1,9 @@
 [Unit]
-Description=LED-blink test
+Description=Blink system LED depending on RAUC status
 After=rauc.service
 
 [Service]
-Type=simple
+Type=oneshot
 ExecStart=/usr/bin/blink-led
 
 [Install]

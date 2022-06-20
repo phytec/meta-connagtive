@@ -7,10 +7,11 @@ inherit systemd
 
 SRC_URI = " \
     file://blink-led.service \
+    file://blink-led.timer \
     file://blink-led \
 "
 
-SYSTEMD_SERVICE_${PN} = "blink-led.service"
+SYSTEMD_SERVICE_${PN} = "blink-led.timer"
 
 do_install() {
     install -d ${D}${bindir}
@@ -18,9 +19,11 @@ do_install() {
 
     install -d ${D}${systemd_system_unitdir}
     install -m 0644 ${WORKDIR}/blink-led.service ${D}${systemd_system_unitdir}
+    install -m 0644 ${WORKDIR}/blink-led.timer ${D}${systemd_system_unitdir}
 }
 
 FILES_${PN} = " \
     ${bindir}/blink-led \
     ${systemd_system_unitdir}/blink-led.service \
+    ${systemd_system_unitdir}/blink-led.timer \
 "
