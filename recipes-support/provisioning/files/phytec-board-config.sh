@@ -37,7 +37,7 @@ REMOTEMANAGER_PATH="${CONFIG_PATH}/esec/"
 SSHPUBKEY_PATH="${CONFIG_PATH}/.ssh/"
 AUTHENT_FILE="${REMOTEMANAGER_PATH}.google_authenticator"
 
-TPM_PIN=$(cat /sys/devices/soc0/soc_uid | head -c 7)
+TPM_PIN=$(cat /sys/devices/soc0/serial_number | head -c 7)
 
 calc_wt_size() {
     # NOTE: it's tempting to redirect stderr to /dev/null, so supress error
