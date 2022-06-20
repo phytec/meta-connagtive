@@ -1,31 +1,19 @@
 #!/bin/sh
 
-if (rauc status | grep -q 'Booted from: rootfs.0 (system0)' &&
-   rauc status | grep -q 'Activated: rootfs.1 (system1)') ||
-   (rauc status | grep -q 'Booted from: rootfs.1 (system1)' &&
-   rauc status | grep -q 'Activated: rootfs.0 (system0)'); then
-    echo 0 > /sys/class/leds/led-green/brightness
-    echo 0 > /sys/class/leds/led-blue/brightness
-    echo heartbeat > /sys/class/leds/led-red/trigger
+RAUC_STATUS=$(rauc status)
+BOOTED_SLOT=$(printf "$RAUC_STATUS" | grep -Eo "(Booted from: [[:alpha:]]+.)[01]" | grep -Eo "[01]$")
+ACTIVATED_SLOT=$(printf "$RAUC_STATUS" | grep -Eo "(Activated: [[:alpha:]]+.)[01]" | grep -Eo "[01]$")
 
-elif rauc status | grep -q 'Booted from: rootfs.1 (system1)' &&
-     rauc status | grep -q 'Activated: rootfs.1 (system1)'; then
-    echo 0 > /sys/class/leds/led-green/brightness
-    echo 0 > /sys/class/leds/led-red/brightness
-    echo heartbeat > /sys/class/leds/led-blue/trigger
-
-elif rauc status | grep -q 'Booted from: rootfs.0 (system0)' &&
-     rauc status | grep -q 'Activated: rootfs.0 (system0)'; then
-    echo 0 > /sys/class/leds/led-blue/brightness
-    echo 0 > /sys/class/leds/led-red/brightness
-    echo heartbeat > /sys/class/leds/led-green/trigger
+if [ \( "$BOOTED_SLOT" = 0 -a "$ACTIVATED_SLOT" = 1 \) -o \( "$BOOTED_SLOT" = 1 -a "$ACTIVATED_SLOT" = 0 \) ]; then
+    printf 0 > /sys/class/leds/green\:cpu/brightness
+    printf 0 > /sys/class/leds/blue\:disk/brightness
+    printf heartbeat > /sys/class/leds/red\:disk/trigger
+elif [ "$BOOTED_SLOT" = 0 ]; then
+    printf 0 > /sys/class/leds/blue\:disk/brightness
+    printf 0 > /sys/class/leds/red\:disk/brightness
+    printf heartbeat > /sys/class/leds/green\:cpu/trigger
+elif [ "$BOOTED_SLOT" = 1 ]; then
+    printf 0 > /sys/class/leds/green\:cpu/brightness
+    printf 0 > /sys/class/leds/red\:disk/brightness
+    printf heartbeat > /sys/class/leds/blue\:disk/trigger
 fi
-rauc_status_old=$(rauc status)
-
-while true; do
-    if [ "$rauc_status_old" != "$(rauc status)" ]
-    then
-        systemctl restart blink-led
-    fi
-    sleep 3
-done
