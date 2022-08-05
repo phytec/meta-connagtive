@@ -77,7 +77,8 @@ setup_devuid() {
 # Create Device Common Name
 setup_devcn() {
     soc=$(cat /sys/devices/soc0/soc_id | tr -d '.')
-    export DEV_CN="PHY-${soc}-${DEV_UID}"
+    mac=$(cat /sys/class/net/eth0/address)
+    export DEV_CN="PHY-${soc}-${mac}"
     if [ ${#DEV_CN} -gt 32 ]; then
         echo "[ERROR] DEV_CN is too long"
         exit 1
