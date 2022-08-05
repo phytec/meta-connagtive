@@ -30,6 +30,7 @@ ESECCONTRACT=False
 
 tpm2pkcs11tool='pkcs11-tool --module /usr/lib/libtpm2_pkcs11.so.0'
 CONFIG_PATH="/mnt/config"
+APP_PATH="/mnt/app"
 AWSCONFIG_PATH="${CONFIG_PATH}/aws"
 AWSCONFIG_CERT="certs"
 AWSCONFIG_CERTPATH="${AWSCONFIG_PATH}/${AWSCONFIG_CERT}"
@@ -127,60 +128,75 @@ do_awsconfig() {
 	if [ ! -f "${FILE}" ]; then
 		cat > ${FILE} <<EOF
 {
-  "endpoint": "aqbh9vo6udjdm-ats.iot.eu-central-1.amazonaws.com",
-  "mqtt_port": 8883,
-  "https_port": 443,
-  "greengrass_discovery_port": 8443,
-  "root_ca_relative_path": "${AWSCONFIG_CERT}/rootcert.pem",
-  "device_certificate_relative_path": "${AWSCONFIG_CERT}/cert.pem",
-  "openssl_engine": "/usr/lib/engines-1.1/pkcs11.so",
-  "pkcs11_provider": "/usr/lib/libtpm2_pkcs11.so.0",
-  "device_private_key_pkcs11_url":
-  "pkcs11:model=SLB9670;manufacturer=Infineon;token=iotdm;object=iotdm-keypair;type=private",
-  "slot_user_pin": "${TPM_PIN}",
-  "tls_handshake_timeout_msecs": 60000,
-  "tls_read_timeout_msecs": 2000,
-  "tls_write_timeout_msecs": 2000,
-  "aws_region": "eu-central-1",
-  "aws_access_key_id": "",
-  "aws_secret_access_key": "",
-  "aws_session_token": "",
-  "client_id": "${DEV_SERIAL}",
-  "thing_name": "${DEV_SERIAL}",
-  "is_clean_session": true,
-  "mqtt_command_timeout_msecs": 20000,
-  "keepalive_interval_secs": 600,
-  "minimum_reconnect_interval_secs": 1,
-  "maximum_reconnect_interval_secs": 128,
-  "maximum_acks_to_wait_for": 32,
-  "action_processing_rate_hz": 5,
-  "maximum_outgoing_action_queue_length": 32,
-  "discover_action_timeout_msecs": 300000,
-  "shadow_update_interval_secs": 0,
+    "endpoint": "aqbh9vo6udjdm-ats.iot.eu-central-1.amazonaws.com",
+    "mqtt_port": 8883,
+    "https_port": 443,
+    "greengrass_discovery_port": 8443,
+    "root_ca_relative_path": "${AWSCONFIG_CERT}/rootcert.pem",
+    "device_certificate_relative_path": "${AWSCONFIG_CERT}/cert.pem",
+    "openssl_engine": "/usr/lib/engines-1.1/pkcs11.so",
+    "pkcs11_provider": "/usr/lib/libtpm2_pkcs11.so.0",
+    "device_private_key_pkcs11_url":
+    "pkcs11:model=SLB9670;manufacturer=Infineon;token=iotdm;object=iotdm-keypair;type=private",
+    "slot_user_pin": "${TPM_PIN}",
+    "tls_handshake_timeout_msecs": 60000,
+    "tls_read_timeout_msecs": 2000,
+    "tls_write_timeout_msecs": 2000,
+    "aws_region": "eu-central-1",
+    "aws_access_key_id": "",
+    "aws_secret_access_key": "",
+    "aws_session_token": "",
+    "client_id": "${DEV_SERIAL}",
+    "thing_name": "${DEV_SERIAL}",
+    "is_clean_session": true,
+    "mqtt_command_timeout_msecs": 20000,
+    "keepalive_interval_secs": 600,
+    "minimum_reconnect_interval_secs": 1,
+    "maximum_reconnect_interval_secs": 128,
+    "maximum_acks_to_wait_for": 32,
+    "action_processing_rate_hz": 5,
+    "maximum_outgoing_action_queue_length": 32,
+    "discover_action_timeout_msecs": 300000,
+    "shadow_update_interval_secs": 0,
 
-  "rauc_hawkbit_client_config_dir": "${HAWKBITCONFIG_PATH}",
-  "rauc_hawkbit_client_config_file": "config.cfg",
+    "rauc_hawkbit_client_config_dir": "${HAWKBITCONFIG_PATH}",
+    "rauc_hawkbit_client_config_file": "config.cfg",
 
-  "remote_manager_config_dir": "${REMOTEMANAGER_PATH}",
-  "remote_manager_config_file": "RemoteManager.conf",
+    "remote_manager_config_dir": "${REMOTEMANAGER_PATH}",
+    "remote_manager_config_file": "RemoteManager.conf",
 
-  "ssh_pub_key_dir": "${SSHPUBKEY_PATH}",
-  "ssh_pub_key_file": "id_ecdsa.pub",
+    "ssh_pub_key_dir": "${SSHPUBKEY_PATH}",
+    "ssh_pub_key_file": "id_ecdsa.pub",
 
-  "isoconnect_app_config_dir": "",
-  "isoconnect_app_config_file": "",
-  "isoconnect_app_config_signature_file": "",
+    "isoconnect_app_config_dir": "",
+    "isoconnect_app_config_file": "",
+    "isoconnect_app_config_signature_file": "",
 
-  "maintenance_task_temp_download_dir": "/tmp/",
-  "maintenance_task_download_whitelist_path":
-  "/etc/aws/config/download_whitelist.txt",
-  "maintenance_task_command_whitelist_path":
-  "/etc/aws/config/command_whitelist.txt",
+    "maintenance_task_temp_download_dir": "/tmp/",
+    "maintenance_task_download_whitelist_path": "/etc/aws/config/download_whitelist.txt",
+    "maintenance_task_command_whitelist_path": "/etc/aws/config/command_whitelist.txt",
 
-  "desired_hawkbit_server_url": "",
+    "desired_hawkbit_server_url": "",
 
-  "shadow_commands": [
-  ]
+    "shadow_commands": [
+        ["timer", "grep OnUnitActiveSec= /lib/systemd/system/awsclient.timer  | grep -o [^=]*.$ | tr -d \"\\n\""],
+        ["fs_cnf", "df | grep ${CONFIG_PATH}$ | tr -s \" \" | tr -d \"\\n\""],
+        ["fs_app", "df | grep ${APP_PATH}$ | tr -s \" \" | tr -d \"\\n\""],
+        ["fs_root", "df | grep /$ | tr -s \" \" | tr -d \"\\n\""],
+        ["up", "cat /proc/uptime | tr -d \"\\n\""],
+        ["krn", "cat /proc/version | tr -d \"\\n\""],
+        ["cpu", "cat /proc/loadavg | tr -d \"\\n\""],
+        ["mem_a", "grep MemAvailable /proc/meminfo | tr -s \" \" | cut -d \" \" -f2 | tr -d \"\\n\""],
+        ["mem_f", "grep MemFree /proc/meminfo | tr -s \" \" | cut -d \" \" -f2 | tr -d \"\\n\""],
+        ["mem_t", "grep MemTotal /proc/meminfo | tr -s \" \" | cut -d \" \" -f2 | tr -d \"\\n\""],
+        ["simno", "phytec-board-info --simno | tr -d \"\\n\""],
+        ["compatible", "phytec-board-info --compatible | tr -d \"\\n\""],
+        ["hwver", "phytec-board-info --machine-version | tr -d \"\\n\""],
+        ["devtype", "phytec-board-info --machine | tr -d \"\\n\""],
+        ["serial", "phytec-board-info --serial | tr -d \"\\n\""],
+        ["remote_manager_version", "remotemanager -v | tr -d \"\\n\""],
+        ["rauc-hawkbit-updater", "rauc-hawkbit-updater -v | tr -d \"\\n\""]
+    ]
 }
 EOF
 fi
