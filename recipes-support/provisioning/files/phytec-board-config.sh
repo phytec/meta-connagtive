@@ -195,6 +195,7 @@ do_awsconfig() {
         ["devtype", "phytec-board-info --machine | tr -d \"\\n\""],
         ["serial", "phytec-board-info --serial | tr -d \"\\n\""],
         ["remote_manager_version", "remotemanager -v | tr -d \"\\n\""],
+        ["remotemanager_service_status", "systemctl is-active remotemanager.service | tr -d \"\\n\""],
         ["rauc-hawkbit-updater", "rauc-hawkbit-updater -v | tr -d \"\\n\""]
     ]
 }
