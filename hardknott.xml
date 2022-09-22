@@ -8,10 +8,12 @@
     supported_builds="
       phyboard-polis-imx8mm-4/phytec-connagtive-provisioning-image/ampliphy-vendor-connagtive-provisioning,
       phyboard-polis-imx8mm-4/phytec-connagtive-test-image/ampliphy-vendor-connagtive,
+      phyboard-polis-imx8mm-4/phytec-connagtive-test-bundle/ampliphy-vendor-connagtive,
       phyboard-polis-imx8mm-4/phytec-connagtive-start-image/ampliphy-vendor-connagtive,
       phyboard-polis-imx8mm-4/-c populate_sdk phytec-connagtive-start-image/ampliphy-vendor-connagtive,
       phygate-tauri-l-imx8mm-2/phytec-connagtive-provisioning-image/ampliphy-vendor-connagtive-provisioning,
       phygate-tauri-l-imx8mm-2/phytec-connagtive-test-image/ampliphy-vendor-connagtive,
+      phygate-tauri-l-imx8mm-2/phytec-connagtive-test-bundle/ampliphy-vendor-connagtive,
       phygate-tauri-l-imx8mm-2/phytec-connagtive-start-image/ampliphy-vendor-connagtive
     "/>
 
