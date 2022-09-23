@@ -1,0 +1,14 @@
+[Unit]
+Description=Migration zeus to hardknott
+After=systemd-user-sessions.service
+After=rc-local.service
+Before=getty.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/migration-zeus-to-hardknott
+User=root
+WorkingDirectory=/mnt/config
+
+[Install]
+WantedBy=multi-user.target
