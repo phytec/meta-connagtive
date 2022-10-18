@@ -11,6 +11,6 @@ RDEPENDS_${PN} += " jq"
 
 do_install () {
     install -d ${D}${bindir}/
-    install -m 0755 ${WORKDIR}/iot-companion.sh ${D}${bindir}/iot
+    install -m 0755 ${WORKDIR}/iot-companion.sh ${D}${bindir}/iot-companion
+    ln -sf iot-companion ${D}/usr/bin/iot
 }
-

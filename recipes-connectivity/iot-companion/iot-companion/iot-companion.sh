@@ -1,30 +1,30 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
-#set -Eeuo pipefail
-set -Eeo pipefail
-
-trap cleanup SIGINT SIGTERM ERR EXIT
-
-
-cleanup() {
-  trap - SIGINT SIGTERM ERR EXIT
-  # script cleanup here
-}
+set -eu
 
 # VERSION TAG
-version="v1.0.2"
+version="v1.1.0"
+
+cat<<EOF
+-----------------------------------------------------------------------------------
+                                IoT Suite Companion
+-----------------------------------------------------------------------------------
+This script holds a list of many useful commands related to managing your device.
+It mainly works as a macro-library.
+The commands, that are executed by this script will be echoed to the commandline.
+EOF
 
 ## Hardware and BSP specific parameters
 AwsClientConfig="/config/os/aws/config/config.json"
-[[ -s $AwsClientConfig ]] && echo "$AwsClientConfig awsclient config file exists and not empty" || echo "$AwsClientConfig awsclient config file doesn't exist or is empty"
+[ -s $AwsClientConfig ] && echo "\n$AwsClientConfig awsclient config file exists and not empty" || echo "$AwsClientConfig awsclient config file doesn't exist or is empty"
 AwsclientTimer="/etc/systemd/system/basic.target.wants/awsclient.timer"
-[[ -s $AwsclientTimer ]] && echo "$AwsclientTimer awsclient timer file exists and not empty" || echo "$AwsclientTimer awsclient timer file doesn't exist or is empty"
+[ -s $AwsclientTimer ] && echo "$AwsclientTimer awsclient timer file exists and not empty" || echo "$AwsclientTimer awsclient timer file doesn't exist or is empty"
 RaucConfig="/etc/rauc/system.conf"
-[[ -s $RaucConfig ]] && echo "$RaucConfig RAUC config file exists and not empty" || echo "$RaucConfig RAUC config file doesn't exist or is empty"
+[ -s $RaucConfig ] && echo "$RaucConfig RAUC config file exists and not empty" || echo "$RaucConfig RAUC config file doesn't exist or is empty"
 JqOutput="/config/os/aws/config/jq_dump"
-[[ -s $JqOutput ]] && echo "$JqOutput jq dump file exists and not empty" || echo "$JqOutput jq dump file doesn't exist or is empty"
+[ -s $JqOutput ] && echo "$JqOutput jq dump file exists and not empty" || echo "$JqOutput jq dump file doesn't exist or is empty"
 
-if [[ -s $AwsClientConfig.sha256 ]]; then
+if [ -s $AwsClientConfig.sha256 ]; then
 	if ! sha256sum --check "$AwsClientConfig.sha256"; then
 		echo "Stored hash for '$AwsClientConfig' does not match existing file, storing new hash"
 		sha256sum "$AwsClientConfig" > "$AwsClientConfig.sha256"
@@ -33,15 +33,15 @@ if [[ -s $AwsClientConfig.sha256 ]]; then
 		# Creating jq dump as new awsclient config file is found
 		JqDump=$(jq -r 'to_entries[] | "\(.key)=\(.value)"' $AwsClientConfig > $JqOutput)
 	else
-		: # hash file exists and matches existing file, do nothing
-		# awsclient config file is not chnaged; using existing jq dump file
-		if [[ -s $JqOutput ]]; then
+		# hash file exists and matches existing file, do nothing
+		# awsclient config file is not changed; using existing jq dump file
+		if [ -s $JqOutput ]; then
 			echo "awsclient config file is not changed and using existing jq dump file"
 		else
 			echo "jq dump file not found! Creating new jq dump file"
 			JqDump=$(jq -r 'to_entries[] | "\(.key)=\(.value)"' $AwsClientConfig > $JqOutput)
 			## Ensuring if jq is successful
-			[[ -s $JqOutput ]] && echo "$JqOutput exists and not empty" || echo "$JqOutput doesn't exist or is empty"
+			[ -s $JqOutput ] && echo "$JqOutput exists and not empty" || echo "$JqOutput doesn't exist or is empty"
 		fi
 	fi
 else
@@ -53,7 +53,7 @@ else
 	JqDump=$(jq -r 'to_entries[] | "\(.key)=\(.value)"' $AwsClientConfig > $JqOutput)
 fi
 
-## Ideas for additional sectionso
+## Ideas for additional sections
 
 # General 
 # versions      show Versions for all clients
@@ -77,10 +77,7 @@ fi
 
 # security		show security related infos (SSHD, Keys, hotp, )
 
-############################################################################################################
-#<<< CONFIGURATION PARSERS 
-
-# Source jq dump file to retrieve configuration parameters
+# Configuration setup. Source jq dump file to retrieve configuration parameters
 if . $JqOutput; then
 	THING_NAME=$thing_name
 	ENDPOINT=$endpoint
@@ -107,30 +104,12 @@ else
 	echo "Couldn't find the jq dump file! Re-run the script to create new jq dump file. Please don't delete the jq_dump file manually."
 fi
 
-#<<< CONFIGURATION PARSERS
-
-#<<< usage 
-#--------------------------------------------------------------------------------------------
-script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)
+script_dir=$( cd -P -- "$(dirname -- "$(command -v -- "$0")")" && pwd -P )
 usage_header(){
 
 cat<<EOF
------------------------------------------------------------------------------------------------------
-  _____   _______    _____       _ _          _____                                  _             
- |_   _| |__   __|  / ____|     (_) |        / ____|                                (_)            
-   | |  ___ | |    | (___  _   _ _| |_ ___  | |     ___  _ __ ___  _ __   __ _ _ __  _  ___  _ __  
-   | | / _ \| |     \___ \| | | | | __/ _ \ | |    / _ \|  _   _ \|  _ \ / _  |  _ \| |/ _ \|  _ \ 
-  _| || (_) | |     ____) | |_| | | ||  __/ | |___| (_) | | | | | | |_) | (_| | | | | | (_) | | | |
- |_____\___/|_|    |_____/ \__,_|_|\__\___|  \_____\___/|_| |_| |_| .__/ \__,_|_| |_|_|\___/|_| |_|
-                                                                  | |                              
-                                                                  |_|                              
-------------------------------------------------------- www.iot-suite.io by OSB connagtive GmbH -----
                              
-Usage: $(basename "${BASH_SOURCE[0]}") [-h] [-v] [aws OPTIONS] [update OPTIONS] [rauc OPTIONS] [tunnel OPTIONS] [support]
-
-This script holds a list of many useful commands related to managing your device.
-It mainly works as a macro-library. 
-The commands, that are executed by this script will be echoed to the commandline.
+Usage: $(basename "${0}") [-h] [-v] [aws OPTIONS] [update OPTIONS] [rauc OPTIONS] [tunnel OPTIONS] [support] [validate]
 
 Available options:
 
@@ -141,98 +120,57 @@ Available options:
 
 Modules:
 
-Enter     $(basename "${BASH_SOURCE[0]}")  MODULE for module option
-or        $(basename "${BASH_SOURCE[0]}")  -h, --help for full help 
+Enter     $(basename "${0}")  MODULE for module option
+or        $(basename "${0}")  -h, --help for full help 
 
-$(basename "${BASH_SOURCE[0]}") support  - Information and Links for IoT Suite and the support
-$(basename "${BASH_SOURCE[0]}") aws              - Controlling the awsclient of IoT Suite               
-$(basename "${BASH_SOURCE[0]}") update           - Software Update Client 
-$(basename "${BASH_SOURCE[0]}") rauc             - Local RAUC commands
-$(basename "${BASH_SOURCE[0]}") tunnel           - SSH Tunnel  Service
-$(basename "${BASH_SOURCE[0]}") validate         - Validate awsclient json file					
+$(basename "${0}") support          - Information and Links for IoT Suite and the support
+$(basename "${0}") aws              - Controlling the awsclient of IoT Suite               
+$(basename "${0}") update           - Software Update Client 
+$(basename "${0}") rauc             - Local RAUC commands
+$(basename "${0}") tunnel           - SSH Tunnel  Service
+$(basename "${0}") validate         - Validate awsclient json file					
                             
 EOF
 }
 
 usage_submodule_header(){
 cat<<EOF
------------------------------------------------------------------------------------------------------
-  _____   _______    _____       _ _          _____                                  _             
- |_   _| |__   __|  / ____|     (_) |        / ____|                                (_)            
-   | |  ___ | |    | (___  _   _ _| |_ ___  | |     ___  _ __ ___  _ __   __ _ _ __  _  ___  _ __  
-   | | / _ \| |     \___ \| | | | | __/ _ \ | |    / _ \|  _   _ \|  _ \ / _  |  _ \| |/ _ \|  _ \ 
-  _| || (_) | |     ____) | |_| | | ||  __/ | |___| (_) | | | | | | |_) | (_| | | | | | (_) | | | |
- |_____\___/|_|    |_____/ \__,_|_|\__\___|  \_____\___/|_| |_| |_| .__/ \__,_|_| |_|_|\___/|_| |_|
-                                                                  | |                              
-                                                                  |_|                              
-------------------------------------------------------- www.iot-suite.io by OSB connagtive GmbH -----
                              
-Usage: $(basename "${BASH_SOURCE[0]}") [-h] [-v] [-p] [aws OPTIONS] [update OPTIONS] [rauc OPTIONS] [tunnel OPTIONS] [support] [validate]
+Usage: $(basename "${0}") [-h] [-v] [-p] [aws OPTIONS] [update OPTIONS] [rauc OPTIONS] [tunnel OPTIONS] [support] [validate]
 
 EOF
 }
 
 print_parameters(){
+usage_submodule_header 
 
-usage_submodule_header
-
-cat<<EOF
-  _____                              
- |  __ \\                             
- | |__) |_ _ _ __ __ _ _ __ ___  ___ 
- |  ___/ _  |  __/ _  |  _   _ \\/ __|
- | |  | (_| | | | (_| | | | | | \__ \\
- |_|   \__ _|_|  \__ _|_| |_| |_|___/                    
--------------------------------------------------------------------------------------------
-EOF 
-#https://patorjk.com/software/taag/#p=display&f=Big&t=Params%0A
-
-  echo -e "List of available configuration found in your system"
+  echo "List of available configuration found in your system"
   echo " - AwsClientConfig      = $AwsClientConfig"
   echo " - AwsclientTimer       = $AwsclientTimer"
   echo " - RaucConfig           = $RaucConfig"
   
-  echo -e "\n Values derived from your AWS Client Config "  
-  echo " THING_NAME = $THING_NAME"
-  echo " ENDPOINT= $ENDPOINT"
-  echo " ALLOW_LIST_FILE_DOWNLOAD= $ALLOW_LIST_FILE_DOWNLOAD"
-  echo " ALLOW_LIST_COMMAND_EXCUTION= $ALLOW_LIST_COMMAND_EXCUTION"
-  echo " FILE_DOWNLOAD_TEMP_DIR= $FILE_DOWNLOAD_TEMP_DIR"
-  echo " REMOTE_MANAGER_CONFIG_DIR = $REMOTE_MANAGER_CONFIG_DIR"
-  echo " REMOTE_MANAGER_CONFIG_FILE= $REMOTE_MANAGER_CONFIG_FILE"
-  echo " RAUC_HAWKBIT_CONFIG_DIR= $RAUC_HAWKBIT_CONFIG_DIR"
-  echo " RAUC_HAWKBIT_CONFIG_FILE = $RAUC_HAWKBIT_CONFIG_FILE"
-  echo " RAUC_HAWKBIT_BUNDLE_DOWNLOAD_LOCATION= $RAUC_HAWKBIT_BUNDLE_DOWNLOAD_LOCATION"
-  echo " SSH_PUB_KEY_DIR= $SSH_PUB_KEY_DIR"
-  echo " SSH_PUB_KEY_FILE = $SSH_PUB_KEY_FILE"
+  echo "\n Values derived from your AWS Client config"  
+  echo " - THING_NAME                             = $THING_NAME"
+  echo " - ENDPOINT                               = $ENDPOINT"
+  echo " - ALLOW_LIST_FILE_DOWNLOAD               = $ALLOW_LIST_FILE_DOWNLOAD"
+  echo " - ALLOW_LIST_COMMAND_EXCUTION            = $ALLOW_LIST_COMMAND_EXCUTION"
+  echo " - FILE_DOWNLOAD_TEMP_DIR                 = $FILE_DOWNLOAD_TEMP_DIR"
+  echo " - REMOTE_MANAGER_CONFIG_DIR              = $REMOTE_MANAGER_CONFIG_DIR"
+  echo " - REMOTE_MANAGER_CONFIG_FILE             = $REMOTE_MANAGER_CONFIG_FILE"
+  echo " - RAUC_HAWKBIT_CONFIG_DIR                = $RAUC_HAWKBIT_CONFIG_DIR"
+  echo " - RAUC_HAWKBIT_CONFIG_FILE               = $RAUC_HAWKBIT_CONFIG_FILE"
+  echo " - RAUC_HAWKBIT_BUNDLE_DOWNLOAD_LOCATION  = $RAUC_HAWKBIT_BUNDLE_DOWNLOAD_LOCATION"
+  echo " - SSH_PUB_KEY_DIR                        = $SSH_PUB_KEY_DIR"
+  echo " - SSH_PUB_KEY_FILE                       = $SSH_PUB_KEY_FILE"
+
 }
-
-onboarding_status(){
-usage_submodule_header
-cat<<EOF
-   ____        _                         _ _             
-  / __ \      | |                       | (_)            
- | |  | |_ __ | |__   ___   __ _ _ __ __| |_ _ __   __ _ 
- | |  | | '_ \| '_ \ / _ \ / _` | '__/ _` | | '_ \ / _` |
- | |__| | | | | |_) | (_) | (_| | | | (_| | | | | | (_| |
-  \____/|_| |_|_.__/ \___/ \__,_|_|  \__,_|_|_| |_|\__, |
-                                                    __/ |
-                                                   |___/ 
-EOF
-
-#ToDo
-}
-
 
 usage_aws(){
 usage_submodule_header
 cat<<EOF
-   _____      _____ 
-  / _ \ \ /\ / / __|
- | (_||\ V  V /\\__ \\
-  \___| \_/\_/ |___/
+
 ------------------------------------------------------------------------------------ 
-MODULE:             $(basename "${BASH_SOURCE[0]}") aws   
+MODULE:             $(basename "${0}") aws   
                     awsclient - Client for health monitoring
 ------------------------------------------------------------------------------------ 
 OPTIONS:
@@ -262,16 +200,9 @@ EOF
 usage_update(){
 usage_submodule_header
 cat<<EOF
-                  _       _       
-                 | |     | |      
-  _   _ _ __   __| | __ _| |_ ___ 
- | | | |  _ \ / _  |/ _  | __/ _ \\
- | |_| | |_) | (_| | (_| | ||  __/
-  \__ _|  __/ \__ _|\__ _|\__\___|
-       | |                        
-       |_|                        
+                   
 ------------------------------------------------------------------------------------ 
-MODULE:             $(basename "${BASH_SOURCE[0]}") update            
+MODULE:             $(basename "${0}") update            
                     rauc-hawkbit-updater - Client that fetches the Software Updates 
 ------------------------------------------------------------------------------------ 
 OPTIONS:
@@ -282,7 +213,7 @@ OPTIONS:
 
     log           - show the latest log messages
 
-    config        - show the config file $RaucHawkbitConfig
+    config        - show the config file $RAUC_HAWKBIT_CONFIG_FILE
     config-edit   - DANGEROUS: opens the config in vi
     
     repo          - download path download bundles
@@ -291,16 +222,11 @@ EOF
 }
 
 usage_rauc(){
-
 usage_submodule_header
 cat<<EOF
-                       
-  _ __ __ _ _   _  ___ 
- |  __/ _  | | | |/ __|
- | | | (_| | |_| | (__ 
- |_|  \__ _|\__ _|\___|                               
+                            
 ------------------------------------------------------------------------------------ 
-MODULE:             $(basename "${BASH_SOURCE[0]}") rauc            
+MODULE:             $(basename "${0}") rauc            
                     local RAUC operation 
 ------------------------------------------------------------------------------------  
 OPTIONS:
@@ -326,14 +252,9 @@ EOF
 usage_tunnel(){
 usage_submodule_header
 cat<<EOF
-  _                          _ 
- | |                        | |
- | |_ _   _ _ __  _ __   ___| |
- | __| | | | '_ \| '_ \ / _ \ |
- | |_| |_| | | | | | | |  __/ |
-  \__|\__,_|_| |_|_| |_|\___|_|
+
 ------------------------------------------------------------------------------------ 
-MODULE:             $(basename "${BASH_SOURCE[0]}") tunnel            
+MODULE:             $(basename "${0}") tunnel            
                     Remote Manager - SSH Tunnel through managed jump host
 ------------------------------------------------------------------------------------ 
 OPTIONS:
@@ -344,7 +265,7 @@ OPTIONS:
 
     log           - show the latest log messages
 
-    config        - show the config file $RemoteManagerConfig
+    config        - show the config file $REMOTE_MANAGER_CONFIG_FILE
     config-edit   - DANGEROUS: opens the config in vi
     
     alive          - show active ssh connections
@@ -353,7 +274,6 @@ OPTIONS:
     
 EOF
 }
-
 
 usage() {
   usage_header
@@ -367,34 +287,10 @@ usage() {
   exit
 }
 
-cleanup() {
-  trap - SIGINT SIGTERM ERR EXIT
-  # script cleanup here
-}
-
-setup_colors() {
-  if [[ -t 2 ]] && [[ -z "${NO_COLOR-}" ]] && [[ "${TERM-}" != "dumb" ]]; then
-    NOFORMAT='\033[0m' RED='\033[0;31m' GREEN='\033[0;32m' ORANGE='\033[0;33m' BLUE='\033[0;34m' PURPLE='\033[0;35m' CYAN='\033[0;36m' YELLOW='\033[1;33m'
-  else
-    NOFORMAT='' RED='' GREEN='' ORANGE='' BLUE='' PURPLE='' CYAN='' YELLOW=''
-  fi
-}
-
-msg() {
-  echo >&2 -e "${1-}"
-}
-
-die() {
-  local msg=$1
-  local code=${2-1} # default exit status 1
-  msg "$msg"
-  exit "$code"
-}
-
 print_support(){
 cat<<EOF
-IoT Suite             # local RAUC operation  
-    Website              - https://www.osb-connagtive.com
+IoT Device Suite              
+    Website              - https://iot-suite.io/
     Support              - mailto: support@iot-suite.io
     Sales                - mailto: sales@iot-suite.io
     Documentation        - http://doc.iot-suite.io (Redirect)
@@ -412,15 +308,13 @@ IoT Suite             # local RAUC operation
                            3) Emergency Contact: 
                                Roland Marx
                                Mail:  roland.marx@osb-connagtive.com
-                               Phone: +49 152 28511213
-    
-    
+                               Phone: +49 152 28511213       
 EOF
 }
 
 parse_params() {
   # default values of variables set from params
-  while :; do
+  while [ "$#" -ne 0 ]; do
     case "${1-}" in
     -h | --help) usage ;;
 	  -v | --version) echo $version ; exit 0 ;;
@@ -492,9 +386,11 @@ parse_params() {
         cmd-edit) 
           file=$ALLOW_LIST_COMMAND_EXCUTION
           echo "vi $file"
-          vi $file ;;
-        -?*) die "Unknown option: $1" ;;
-        *) usage_aws break ;;
+          vi $file ;;        
+        ?*) echo '\nUnknown arguement for sub-command aws | Please refer to Usage' >&2; usage_aws exit 1 ;;
+        *)
+          usage_aws 
+          exit 1 ;;
         esac ;;
         
     ## RAUC-Hawkbit Update
@@ -528,10 +424,11 @@ parse_params() {
         repo)
           file=$(getRaucHawkbitRepo)
           echo $file 
-          ;;
-          
-        -?*) die "Unknown option: $1" ;;
-        *) usage_update break ;;
+          ;; 
+        ?*) echo '\nUnknown arguement for sub-command update | Please refer to Usage' >&2; usage_update exit 1 ;;
+        *) 
+          usage_update 
+          exit 1 ;;
         esac ;;
     ## RAUC-Lokal
     rauc)
@@ -574,8 +471,10 @@ parse_params() {
         config-reload)
           echo "systemctl restart rauc"
          systemctl restart rauc;;
-        -?*) die "Unknown option: $1" ;;
-        *) usage_rauc break ;;
+        ?*) echo '\nUnknown arguement for sub-command rauc | Please refer to Usage' >&2; usage_rauc exit 1 ;;
+        *)
+          usage_rauc 
+          exit 1 ;;
         esac ;;
         
       ## Remote Manager - SSH Tunnel
@@ -619,32 +518,30 @@ parse_params() {
           echo $file 
           echo
           cat $file
-          ;;
-          
-        -?*) die "Unknown option: $1" ;;
-        *) usage_tunnel break ;;
+          ;;  
+        ?*) echo '\nUnknown arguement for sub-command tunnel | Please refer to Usage' >&2; usage_tunnel exit 1 ;;
+        *) 
+          usage_tunnel 
+          exit 1 ;;
         esac ;;
     validate)
-    	cat $AwsClientConfig | jq || echo >&2 "Invalid JSON syntax" ;;		    
+    	cat $AwsClientConfig | jq || echo >&2 "\nInvalid JSON syntax" ;;		    
     support)
       print_support ;;
     suite)
       print_support ;; 
-    -?*) die "Unknown option: $1" ;;
-    *) break ;;
+    ?*) echo '\nUnknown arguement | Please refer to Usage' >&2; usage_submodule_header exit 1 ;;
+    *) 
+      usage_header
+      exit 1 ;;
     esac
     shift
   done
-
-  args=("$@")
-  # check required params and arguments
-  #[[ ${#args[@]} -eq 0 ]] && usage_header
 
   return 0
 }
 
 parse_params "$@"
-setup_colors
 
 # script logic here
 if [ $# -eq 0 ]; then
