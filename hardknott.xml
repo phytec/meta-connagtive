@@ -2,9 +2,10 @@
 <manifest>
   <phytec
     pdn="hardknott"
-    release_uid="BSP-Yocto-FSL-i.MX8MM-hardknott"
-    bspextension="FSL"
+    release_uid="BSP-Yocto-Connagtive-i.MX8MM-hardknott"
+    bspextension="Connagtive"
     soc="iMX8MM"
+    build_container="yocto:ubuntu20.04"
     supported_builds="
       phyboard-polis-imx8mm-4/phytec-provisioning-image/ampliphy-vendor-provisioning,
       phyboard-polis-imx8mm-4/phytec-connagtive-test-bundle/ampliphy-vendor-connagtive,
