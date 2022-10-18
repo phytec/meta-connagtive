@@ -10,7 +10,7 @@
       phyboard-polis-imx8mm-4/phytec-connagtive-test-bundle/ampliphy-vendor-connagtive,
       phyboard-polis-imx8mm-4/phytec-connagtive-start-image/ampliphy-vendor-connagtive,
       phyboard-polis-imx8mm-4/phytec-connagtive-test-migration-zeus-to-hardknott-bundle/ampliphy-vendor-connagtive,
-      phyboard-polis-imx8mm-4/-c populate_sdk phytec-connagtive-start-image/ampliphy-vendor-connagtive,
+      phyboard-polis-imx8mm-4/-c populate_sdk phytec-connagtive-test-image/ampliphy-vendor-connagtive,
       phygate-tauri-l-imx8mm-2/phytec-provisioning-image/ampliphy-vendor-provisioning,
       phygate-tauri-l-imx8mm-2/phytec-connagtive-test-bundle/ampliphy-vendor-connagtive,
       phygate-tauri-l-imx8mm-2/phytec-connagtive-start-image/ampliphy-vendor-connagtive
