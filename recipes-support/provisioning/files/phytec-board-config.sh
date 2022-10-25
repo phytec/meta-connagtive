@@ -1,6 +1,6 @@
 #!/bin/sh
 
-version=1.1
+version=1.2
 usage="
 PHYTEC Onboarding Tool for Connagtive IoT Device Suite Platform
 For More information: https://doc.iot-suite.io
@@ -305,29 +305,33 @@ do_onboarding() {
 	PRIVATEKEYURI="pkcs11:model=SLB9670;manufacturer=Infineon;token=iotdm;object=iotdm-keypair;type=private"
 	response=$(curl --cacert ${AWSCONFIG_CERTPATH}/rootcert.pem --engine pkcs11 --key-type ENG --key "${PRIVATEKEYURI};pin-value=${TPM_PIN}" --cert ${AWSCONFIG_CERTPATH}/devcert.pem ${awsrequest})
 	if [ $? -ne 0 ]; then
-	   return 1
+		[ "$INTERACTIVE" = True ] && return 1 || exit 1
 	fi
-	if [ "$INTERACTIVE" = True ]; then
-		#error check
-		check=$(echo ${response} | jq .message)
-		if [ "$check" = "\"Forbidden\"" ]; then
-			return 2
-		fi
-		check=$(echo ${response} | jq .errorType)
-		if [ ! -z "$check" ] && [ ! "$check" = null ]; then
-			check=$(echo ${response} | jq .errorMessage)
-			whiptail --msgbox "\
-Error Message from IoT Device Manager
-$check" $WT_HEIGHT $WT_WIDTH
+	[ "$INTERACTIVE" = False ] && echo "response: ${response}"
+	#error check
+	check=$(echo ${response} | jq .message)
+	if [ "$check" = "\"Forbidden\"" ]; then
+		[ "$INTERACTIVE" = True ] && return 2 || exit 2
+	fi
+	check=$(echo ${response} | jq .errorType)
+	if [ ! -z "$check" ] && [ ! "$check" = null ]; then
+		check=$(echo ${response} | jq .errorMessage)
+		strmessage=$(echo "Error Message from IoT Device Manager $check")
+		if [ "$INTERACTIVE" = True ]; then
+			whiptail --msgbox "${strmessage}" $WT_HEIGHT $WT_WIDTH
 			return 0
+		else
+			echo "${strmessage}"
+			exit 3
 		fi
-		if [ $# -eq 0 ]; then
-			# get token
-			set_onboarded tokendevice
-			certserial=$(echo ${response} | jq .thing_name)
-			token=$(echo ${response} | jq .token)
-			valid=$(echo ${response} | jq .valid_until)
-			whiptail --msgbox "\
+	fi
+	if [ $# -eq 0 ]; then
+		# get token
+		set_onboarded tokendevice
+		certserial=$(echo ${response} | jq .thing_name)
+		token=$(echo ${response} | jq .token)
+		valid=$(echo ${response} | jq .valid_until)
+		strmessage=$(echo "\
 Welcome to the Connagtive IoT Device Suite Platform
 The next steps are:
  1) Login to your account on the Connagtive IoT Device
@@ -340,12 +344,17 @@ The next steps are:
     Valid until: ${valid}
     to your account:
  3) Press 'Ok'. The awsclient will be
-    restarted three times." $WT_HEIGHT $WT_WIDTH
+    restarted three times.")
+		if [ "$INTERACTIVE" = True ]; then
+			whiptail --msgbox "${strmessage}" $WT_HEIGHT $WT_WIDTH
 		else
-			# get user item
-			set_onboarded accountdevice
-			check=$(echo ${response} | jq .user_item.customer_name)
-			whiptail --msgbox "\
+			echo "${strmessage}"
+		fi
+	else
+		# get user item
+		set_onboarded accountdevice
+		check=$(echo ${response} | jq .user_item.customer_name)
+		strmessage=$(echo "\
 Welcome ${check}
 to the Connagtive IoT Device Suite Platform
 The next steps are:
@@ -354,16 +363,12 @@ The next steps are:
  2) Verify your email
  3) Login to your IoT Device Suite account
  4) Check the state of your device in
-    your IoT Device Suite account" $WT_HEIGHT $WT_WIDTH
-		fi
-	else
-		if [ $# -eq 0 ]; then
-			set_onboarded tokendevice
+ your IoT Device Suite account")
+		if [ "$INTERACTIVE" = True ]; then
+			whiptail --msgbox "${strmessage}" $WT_HEIGHT $WT_WIDTH
 		else
-			set_onboarded accountdevice
+			echo "${strmessage}"
 		fi
-		echo "response: ${response}"
-		echo "After a successful onboarding the awsclient needs to be rerun with 'systemctl restart awsclient' three times."
 	fi
 	do_restart_awsclient
 	do_getauthenticator
@@ -389,13 +394,16 @@ do_newaccount() {
 do_restart_awsclient() {
 	set_awsclient start
 	echo Restarting awsclient, this may take a while...
-	systemctl restart awsclient
-	systemctl restart awsclient
-	systemctl restart awsclient
+	for i in 1 2 3
+	do
+		systemctl restart awsclient
+		[ $? -ne 0 ] && return 1
+	done
 	FILE=${HAWKBITCONFIG_PATH}config.cfg
 	if [ ! -f "${FILE}" ]; then
 		set_awsclient stop
 	fi
+	return 0
 }
 
 do_login() {
@@ -424,7 +432,7 @@ do_login() {
 do_getauthenticator() {
 	response=$(curl --cacert ${AWSCONFIG_CERTPATH}/rootcert.pem --engine pkcs11 --key-type ENG --key "${PRIVATEKEYURI};pin-value=${TPM_PIN}" --cert ${AWSCONFIG_CERTPATH}/devcert.pem https://devices.aws.esec-experts.com/ownership/ssh_keys)
 	if [ $? -ne 0 ]; then
-	   return 1
+		[ "$INTERACTIVE" = True ] && return 1 || exit 1
 	fi
 	devicekey=$(echo ${response} | jq .DEVICE_KEY | tr -d '"' | tr -d "=")
 	scratchcode=$(echo ${response} | jq .SCRATCH_CODES | tr -d '"' | tr -d ',')
@@ -462,28 +470,30 @@ for i in $*
 do
 	case $i in
 	-o|--onboarding)
+		INTERACTIVE=False
 		do_onboarding
 		exit 0
 		;;
 	--newaccount=*)
+		INTERACTIVE=False
 		OPT=`echo $i | sed 's/[-a-zA-Z0-9]*=//'`
 		do_onboarding $OPT
 		exit 0
 		;;
 	-n)
-		INTERACTIVE=True
+		INTERACTIVE=False
 		do_newaccount
 		exit 0
 		;;
 	-a|--acceptcontract)
 		set_eseccontract
-		INTERACTIVE=False
 		;;
 	-s|--sshlogin)
 		do_login "SSH" "sshd"
 		exit 0
 		;;
 	-r|--restartawsclient)
+		INTERACTIVE=False
 		do_restart_awsclient
 		exit 0
 		;;
