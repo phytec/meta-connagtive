@@ -36,7 +36,7 @@ This layer depends on:
 * Openembedded core
 * Bitbake
 * meta-phytec
-* meta-yogurt
+* meta-ampliphy
 * meta-rauc
 
 License
