@@ -11,7 +11,8 @@ SRC_URI = "\
 SRC_URI[md5sum] = "7cf0988fc82f2d67a8495561cd6ca3ed"
 SRC_URI[sha256sum] = "83ce772d795eed684da49ab04c794fd9c054f1d3e72955be2ecc1d447e18261a"
 
-DEPENDS = "curl glib-2.0 json-glib openssl"
+DEPENDS = "curl glib-2.0 json-glib openssl sqlite3"
+RDEPENDS_${PN} = "sqlite3"
 
 inherit systemd
 
