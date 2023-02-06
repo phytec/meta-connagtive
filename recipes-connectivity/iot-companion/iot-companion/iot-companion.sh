@@ -14,15 +14,27 @@ It mainly works as a macro-library.
 The commands, that are executed by this script will be echoed to the commandline.
 EOF
 
+CONFIG=/etc/aws/config/iot-companion.config
+# Check for iot-companion.config file
+if [ -f "${CONFIG}" ];then
+	if [ -s "${CONFIG}" ];then
+		echo "\nFile ${CONFIG} exists and not empty | Sourcing the file"
+		. $CONFIG
+	else
+		echo "\nFile ${CONFIG} exists but empty | Please check the file contents"
+	fi
+else
+	echo "\nFile ${CONFIG} not exists"
+fi
+
 ## Hardware and BSP specific parameters
-AwsClientConfig="/config/os/aws/config/config.json"
-[ -s $AwsClientConfig ] && echo "\n$AwsClientConfig awsclient config file exists and not empty" || echo "$AwsClientConfig awsclient config file doesn't exist or is empty"
-AwsclientTimer="/etc/systemd/system/basic.target.wants/awsclient.timer"
-[ -s $AwsclientTimer ] && echo "$AwsclientTimer awsclient timer file exists and not empty" || echo "$AwsclientTimer awsclient timer file doesn't exist or is empty"
-RaucConfig="/etc/rauc/system.conf"
-[ -s $RaucConfig ] && echo "$RaucConfig RAUC config file exists and not empty" || echo "$RaucConfig RAUC config file doesn't exist or is empty"
-JqOutput="/config/os/aws/config/jq_dump"
-[ -s $JqOutput ] && echo "$JqOutput jq dump file exists and not empty" || echo "$JqOutput jq dump file doesn't exist or is empty"
+[ -s $AwsClientConfig ] && echo "\n$AwsClientConfig awsclient config file exists and not empty" || echo "\n$AwsClientConfig awsclient config file doesn't exist or is empty"
+
+[ -s $AwsclientTimer ] && echo "\n$AwsclientTimer awsclient timer file exists and not empty" || echo "\n$AwsclientTimer awsclient timer file doesn't exist or is empty"
+
+[ -s $RaucConfig ] && echo "\n$RaucConfig RAUC config file exists and not empty" || echo "\n$RaucConfig RAUC config file doesn't exist or is empty"
+
+[ -s $JqOutput ] && echo "\n$JqOutput jq dump file exists and not empty" || echo "\n$JqOutput jq dump file doesn't exist or is empty"
 
 if [ -s $AwsClientConfig.sha256 ]; then
 	if ! sha256sum --check "$AwsClientConfig.sha256"; then
